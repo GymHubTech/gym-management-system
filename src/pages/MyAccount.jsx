@@ -16,10 +16,8 @@ import {
   ArrowUpRight,
   Shield,
   Key,
-  Bell,
   Clock,
   CheckCircle,
-  AlertCircle,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -92,15 +90,23 @@ const MyAccount = () => {
     },
   ];
 
-  const tabs = [
+  // Define tabs based on role - Admin sees all, Trainer only sees Profile and Security
+  const adminTabs = [
     { key: 'profile', label: 'Profile', icon: User },
     { key: 'subscription', label: 'Subscription', icon: CreditCard },
     { key: 'billing', label: 'Billing History', icon: Calendar },
     { key: 'security', label: 'Security', icon: Shield },
   ];
 
+  const trainerTabs = [
+    { key: 'profile', label: 'Profile', icon: User },
+    { key: 'security', label: 'Security', icon: Shield },
+  ];
+
+  const tabs = isAdmin ? adminTabs : trainerTabs;
+
   return (
-    <Layout title="My Account" subtitle="Manage your account settings and subscription">
+    <Layout title="My Account" subtitle="Manage your account settings">
       {/* Tabs */}
       <div className="flex gap-2 mb-6 border-b border-dark-200 pb-2 overflow-x-auto">
         {tabs.map((tab) => (
@@ -125,7 +131,7 @@ const MyAccount = () => {
           {/* Account Owner Info */}
           <div className="card">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-dark-800">Account Owner</h3>
+              <h3 className="text-lg font-semibold text-dark-800">My Profile</h3>
               <button
                 onClick={() => setShowEditModal(true)}
                 className="btn-secondary flex items-center gap-2"
@@ -144,61 +150,85 @@ const MyAccount = () => {
                 </Badge>
               </div>
             </div>
-          </div>
 
-          {/* Gym/Business Info */}
-          <div className="card">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-dark-800">Business Information</h3>
-              <button className="btn-secondary flex items-center gap-2">
-                <Edit className="w-4 h-4" />
-                Edit
-              </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Contact Details */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 pt-6 border-t border-dark-100">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-primary-100 rounded-xl">
-                  <Building className="w-6 h-6 text-primary-600" />
+                  <Mail className="w-6 h-6 text-primary-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-dark-400">Business Name</p>
-                  <p className="font-semibold text-dark-800">{accountData.gym.name}</p>
+                  <p className="text-sm text-dark-400">Email</p>
+                  <p className="font-semibold text-dark-800">{user.email}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-success-100 rounded-xl">
-                  <Mail className="w-6 h-6 text-success-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-dark-400">Email</p>
-                  <p className="font-semibold text-dark-800">{accountData.gym.email}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-accent-100 rounded-xl">
-                  <Phone className="w-6 h-6 text-accent-600" />
+                  <Phone className="w-6 h-6 text-success-600" />
                 </div>
                 <div>
                   <p className="text-sm text-dark-400">Phone</p>
-                  <p className="font-semibold text-dark-800">{accountData.gym.phone}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-warning-100 rounded-xl">
-                  <MapPin className="w-6 h-6 text-warning-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-dark-400">Address</p>
-                  <p className="font-semibold text-dark-800">{accountData.gym.address}</p>
+                  <p className="font-semibold text-dark-800">+1 234 567 8900</p>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Business Info - Admin Only */}
+          {isAdmin && (
+            <div className="card">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-dark-800">Business Information</h3>
+                <button className="btn-secondary flex items-center gap-2">
+                  <Edit className="w-4 h-4" />
+                  Edit
+                </button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-primary-100 rounded-xl">
+                    <Building className="w-6 h-6 text-primary-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-dark-400">Business Name</p>
+                    <p className="font-semibold text-dark-800">{accountData.gym.name}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-success-100 rounded-xl">
+                    <Mail className="w-6 h-6 text-success-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-dark-400">Business Email</p>
+                    <p className="font-semibold text-dark-800">{accountData.gym.email}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-accent-100 rounded-xl">
+                    <Phone className="w-6 h-6 text-accent-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-dark-400">Business Phone</p>
+                    <p className="font-semibold text-dark-800">{accountData.gym.phone}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-warning-100 rounded-xl">
+                    <MapPin className="w-6 h-6 text-warning-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-dark-400">Address</p>
+                    <p className="font-semibold text-dark-800">{accountData.gym.address}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Subscription Tab */}
-      {activeTab === 'subscription' && (
+      {/* Subscription Tab - Admin Only */}
+      {activeTab === 'subscription' && isAdmin && (
         <div className="space-y-6">
           {/* Current Plan */}
           <div className="card">
@@ -327,8 +357,8 @@ const MyAccount = () => {
         </div>
       )}
 
-      {/* Billing History Tab */}
-      {activeTab === 'billing' && (
+      {/* Billing History Tab - Admin Only */}
+      {activeTab === 'billing' && isAdmin && (
         <div className="card">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-dark-800">Payment History</h3>
@@ -445,16 +475,18 @@ const MyAccount = () => {
           <div className="card">
             <h3 className="text-lg font-semibold text-dark-800 mb-4">Email Notifications</h3>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-dark-50 rounded-lg">
-                <div>
-                  <p className="font-medium text-dark-800">Billing Alerts</p>
-                  <p className="text-sm text-dark-500">Get notified about payments and invoices</p>
+              {isAdmin && (
+                <div className="flex items-center justify-between p-4 bg-dark-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-dark-800">Billing Alerts</p>
+                    <p className="text-sm text-dark-500">Get notified about payments and invoices</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" className="sr-only peer" defaultChecked />
+                    <div className="w-11 h-6 bg-dark-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+                  </label>
                 </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" className="sr-only peer" defaultChecked />
-                  <div className="w-11 h-6 bg-dark-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
-                </label>
-              </div>
+              )}
               <div className="flex items-center justify-between p-4 bg-dark-50 rounded-lg">
                 <div>
                   <p className="font-medium text-dark-800">Security Alerts</p>
@@ -467,11 +499,11 @@ const MyAccount = () => {
               </div>
               <div className="flex items-center justify-between p-4 bg-dark-50 rounded-lg">
                 <div>
-                  <p className="font-medium text-dark-800">Product Updates</p>
-                  <p className="text-sm text-dark-500">Get notified about new features</p>
+                  <p className="font-medium text-dark-800">Appointment Reminders</p>
+                  <p className="text-sm text-dark-500">Get notified about upcoming appointments</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" className="sr-only peer" />
+                  <input type="checkbox" className="sr-only peer" defaultChecked />
                   <div className="w-11 h-6 bg-dark-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
                 </label>
               </div>
@@ -510,6 +542,10 @@ const MyAccount = () => {
             <label className="label">Email</label>
             <input type="email" className="input" defaultValue={user.email} />
           </div>
+          <div>
+            <label className="label">Phone</label>
+            <input type="tel" className="input" defaultValue="+1 234 567 8900" />
+          </div>
           <div className="flex gap-3 pt-4">
             <button type="button" onClick={() => setShowEditModal(false)} className="flex-1 btn-secondary">
               Cancel
@@ -521,76 +557,80 @@ const MyAccount = () => {
         </form>
       </Modal>
 
-      {/* Upgrade Plan Modal */}
-      <Modal
-        isOpen={showUpgradeModal}
-        onClose={() => setShowUpgradeModal(false)}
-        title="Upgrade Your Plan"
-        size="lg"
-      >
-        <div className="space-y-6">
-          <p className="text-dark-500">
-            Choose a plan that best fits your gym's needs. You can upgrade or downgrade at any time.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {plans.filter((p) => !p.current).map((plan) => (
-              <div
-                key={plan.name}
-                className="p-4 border border-dark-200 rounded-xl hover:border-primary-500 transition-colors cursor-pointer"
-              >
-                <h4 className="font-bold text-dark-800">{plan.name}</h4>
-                <p className="text-2xl font-bold text-primary-600 mt-2">${plan.price}/mo</p>
-                <ul className="mt-4 space-y-2">
-                  {plan.features.slice(0, 4).map((feature, index) => (
-                    <li key={index} className="flex items-center gap-2 text-sm text-dark-600">
-                      <Check className="w-4 h-4 text-success-500" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <button className="w-full btn-primary mt-4">Select Plan</button>
-              </div>
-            ))}
+      {/* Upgrade Plan Modal - Admin Only */}
+      {isAdmin && (
+        <Modal
+          isOpen={showUpgradeModal}
+          onClose={() => setShowUpgradeModal(false)}
+          title="Upgrade Your Plan"
+          size="lg"
+        >
+          <div className="space-y-6">
+            <p className="text-dark-500">
+              Choose a plan that best fits your gym's needs. You can upgrade or downgrade at any time.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {plans.filter((p) => !p.current).map((plan) => (
+                <div
+                  key={plan.name}
+                  className="p-4 border border-dark-200 rounded-xl hover:border-primary-500 transition-colors cursor-pointer"
+                >
+                  <h4 className="font-bold text-dark-800">{plan.name}</h4>
+                  <p className="text-2xl font-bold text-primary-600 mt-2">${plan.price}/mo</p>
+                  <ul className="mt-4 space-y-2">
+                    {plan.features.slice(0, 4).map((feature, index) => (
+                      <li key={index} className="flex items-center gap-2 text-sm text-dark-600">
+                        <Check className="w-4 h-4 text-success-500" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <button className="w-full btn-primary mt-4">Select Plan</button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      )}
 
-      {/* Update Payment Method Modal */}
-      <Modal
-        isOpen={showPaymentMethodModal}
-        onClose={() => setShowPaymentMethodModal(false)}
-        title="Update Payment Method"
-        size="md"
-      >
-        <form className="space-y-4">
-          <div>
-            <label className="label">Card Number</label>
-            <input type="text" className="input" placeholder="1234 5678 9012 3456" />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
+      {/* Update Payment Method Modal - Admin Only */}
+      {isAdmin && (
+        <Modal
+          isOpen={showPaymentMethodModal}
+          onClose={() => setShowPaymentMethodModal(false)}
+          title="Update Payment Method"
+          size="md"
+        >
+          <form className="space-y-4">
             <div>
-              <label className="label">Expiry Date</label>
-              <input type="text" className="input" placeholder="MM/YY" />
+              <label className="label">Card Number</label>
+              <input type="text" className="input" placeholder="1234 5678 9012 3456" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="label">Expiry Date</label>
+                <input type="text" className="input" placeholder="MM/YY" />
+              </div>
+              <div>
+                <label className="label">CVC</label>
+                <input type="text" className="input" placeholder="123" />
+              </div>
             </div>
             <div>
-              <label className="label">CVC</label>
-              <input type="text" className="input" placeholder="123" />
+              <label className="label">Name on Card</label>
+              <input type="text" className="input" placeholder="John Doe" />
             </div>
-          </div>
-          <div>
-            <label className="label">Name on Card</label>
-            <input type="text" className="input" placeholder="John Doe" />
-          </div>
-          <div className="flex gap-3 pt-4">
-            <button type="button" onClick={() => setShowPaymentMethodModal(false)} className="flex-1 btn-secondary">
-              Cancel
-            </button>
-            <button type="submit" className="flex-1 btn-primary">
-              Update Card
-            </button>
-          </div>
-        </form>
-      </Modal>
+            <div className="flex gap-3 pt-4">
+              <button type="button" onClick={() => setShowPaymentMethodModal(false)} className="flex-1 btn-secondary">
+                Cancel
+              </button>
+              <button type="submit" className="flex-1 btn-primary">
+                Update Card
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
     </Layout>
   );
 };

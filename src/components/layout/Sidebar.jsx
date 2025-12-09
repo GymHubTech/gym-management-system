@@ -10,18 +10,15 @@ import {
   Receipt,
   FileBarChart,
   Dumbbell,
-  LogOut,
   UserCog,
   Wallet,
   ChevronDown,
   ChevronRight,
   ChevronLeft,
-  User,
-  Menu,
 } from 'lucide-react';
 
 const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
-  const { user, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const location = useLocation();
   const [expandedMenus, setExpandedMenus] = useState(['reports']);
 
@@ -58,7 +55,6 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
             { path: '/reports/expense', label: 'Expense Report' },
           ],
         },
-        { path: '/my-account', icon: User, label: 'My Account' },
       ],
     },
   ];
@@ -79,7 +75,6 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       section: 'ACCOUNT',
       items: [
         { path: '/reports/my-collection', icon: Wallet, label: 'My Collection' },
-        { path: '/my-account', icon: User, label: 'My Account' },
       ],
     },
   ];
@@ -227,28 +222,6 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
           </div>
         ))}
       </nav>
-
-      {/* User Profile */}
-      <div className="border-t border-dark-100 p-4">
-        <div className={`flex items-center gap-3 ${isCollapsed ? 'justify-center' : ''}`}>
-          <img
-            src={user.avatar}
-            alt={user.name}
-            className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-          />
-          {!isCollapsed && (
-            <>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-dark-800 truncate">{user.name}</p>
-                <p className="text-xs text-dark-400 capitalize">{user.role}</p>
-              </div>
-              <button className="p-2 text-dark-400 hover:text-danger-500 hover:bg-danger-50 rounded-lg transition-colors">
-                <LogOut className="w-5 h-5" />
-              </button>
-            </>
-          )}
-        </div>
-      </div>
     </aside>
   );
 };
