@@ -10,9 +10,7 @@ import TrainerDashboard from './pages/trainer/Dashboard';
 // Shared Pages
 import CheckIn from './pages/CheckIn';
 import CustomerList from './pages/customers/CustomerList';
-import BillsPayment from './pages/customers/BillsPayment';
-import ProgressTracking from './pages/customers/ProgressTracking';
-import CustomerAppointments from './pages/customers/Appointments';
+import CustomerProfile from './pages/customers/CustomerProfile';
 import MembershipPlans from './pages/MembershipPlans';
 import Expenses from './pages/Expenses';
 import Calendar from './pages/Calendar';
@@ -21,6 +19,8 @@ import ExpenseReport from './pages/reports/ExpenseReport';
 import MyCollection from './pages/reports/MyCollection';
 import UserManagement from './pages/UserManagement';
 import Notifications from './pages/Notifications';
+import MyAccount from './pages/MyAccount';
+import Settings from './pages/Settings';
 
 // Dashboard component that renders based on user role
 const Dashboard = () => {
@@ -42,9 +42,7 @@ function App() {
 
           {/* Customer Management */}
           <Route path="/customers" element={<CustomerList />} />
-          <Route path="/customers/bills" element={<BillsPayment />} />
-          <Route path="/customers/progress" element={<ProgressTracking />} />
-          <Route path="/customers/appointments" element={<CustomerAppointments />} />
+          <Route path="/customers/:id" element={<CustomerProfile />} />
 
           {/* Membership Plans (Admin Only) */}
           <Route path="/membership-plans" element={<MembershipPlans />} />
@@ -65,6 +63,12 @@ function App() {
 
           {/* Notifications */}
           <Route path="/notifications" element={<Notifications />} />
+
+          {/* My Account */}
+          <Route path="/my-account" element={<MyAccount />} />
+
+          {/* Settings */}
+          <Route path="/settings" element={<Settings />} />
 
           {/* Catch all - redirect to dashboard */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

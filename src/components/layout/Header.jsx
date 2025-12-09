@@ -1,26 +1,33 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   Search,
   Bell,
-  Menu,
-  X,
-  Sun,
-  Moon,
   ChevronDown,
-  Settings,
   User,
   LogOut,
 } from 'lucide-react';
 import { mockNotifications } from '../../data/mockData';
 
 const Header = ({ title, subtitle }) => {
+  const navigate = useNavigate();
   const { user, switchRole, isAdmin } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const unreadCount = mockNotifications.filter((n) => !n.read).length;
+
+  const handleViewAllNotifications = () => {
+    setShowNotifications(false);
+    navigate('/notifications');
+  };
+
+  const handleMyProfile = () => {
+    setShowUserMenu(false);
+    navigate('/my-account');
+  };
 
   return (
     <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-dark-100">
@@ -127,9 +134,12 @@ const Header = ({ title, subtitle }) => {
                   ))}
                 </div>
                 <div className="px-4 py-3 bg-dark-50 text-center">
-                  <span className="text-sm text-primary-500 hover:text-primary-600 cursor-pointer font-medium">
+                  <button
+                    onClick={handleViewAllNotifications}
+                    className="text-sm text-primary-500 hover:text-primary-600 cursor-pointer font-medium"
+                  >
                     View All Notifications
-                  </span>
+                  </button>
                 </div>
               </div>
             )}
@@ -157,13 +167,12 @@ const Header = ({ title, subtitle }) => {
                   <p className="text-xs text-dark-400">{user.email}</p>
                 </div>
                 <div className="py-2">
-                  <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-dark-600 hover:bg-dark-50 transition-colors">
+                  <button
+                    onClick={handleMyProfile}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-dark-600 hover:bg-dark-50 transition-colors"
+                  >
                     <User className="w-4 h-4" />
                     My Profile
-                  </button>
-                  <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-dark-600 hover:bg-dark-50 transition-colors">
-                    <Settings className="w-4 h-4" />
-                    Settings
                   </button>
                 </div>
                 <div className="border-t border-dark-100 py-2">
