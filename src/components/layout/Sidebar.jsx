@@ -36,7 +36,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       items: [
         { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/check-in', icon: UserCheck, label: 'Check-In System' },
-        { path: '/customers', icon: Users, label: 'Customer Management' },
+        { path: '/customers', icon: Users, label: 'Customers' },
         { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
         { path: '/expenses', icon: Receipt, label: 'Expense List' },
       ],
@@ -68,7 +68,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       items: [
         { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/check-in', icon: UserCheck, label: 'Check-In System' },
-        { path: '/customers', icon: Users, label: 'My Customers' },
+        { path: '/customers', icon: Users, label: 'Customers' },
         { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
       ],
     },
