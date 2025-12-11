@@ -17,6 +17,7 @@ import Expenses from './pages/Expenses';
 import Calendar from './pages/Calendar';
 import CollectionReport from './pages/reports/CollectionReport';
 import ExpenseReport from './pages/reports/ExpenseReport';
+import SummaryReport from './pages/reports/SummaryReport';
 import MyCollection from './pages/reports/MyCollection';
 import UserManagement from './pages/UserManagement';
 import Notifications from './pages/Notifications';
@@ -56,6 +57,7 @@ function App() {
             <Route path="/calendar" element={<Calendar />} />
 
             {/* Reports */}
+            <Route path="/reports/summary" element={<SummaryReport />} />
             <Route path="/reports/collection" element={<CollectionReport />} />
             <Route path="/reports/expense" element={<ExpenseReport />} />
             <Route path="/reports/my-collection" element={<MyCollection />} />
