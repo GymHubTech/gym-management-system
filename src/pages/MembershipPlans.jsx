@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Layout from '../components/layout/Layout';
 import { Badge, Modal } from '../components/common';
 import {
@@ -11,15 +11,17 @@ import {
   DollarSign,
   Award,
 } from 'lucide-react';
-import { membershipPlanService } from '../services/membershipPlanService';
-import { Alert, Toast } from '../utils/alert';
+import { Alert } from '../utils/alert';
+import { 
+  useMembershipPlans, 
+  useCreateMembershipPlan, 
+  useUpdateMembershipPlan, 
+  useDeleteMembershipPlan 
+} from '../hooks/useMembershipPlans';
 
 const MembershipPlans = () => {
-  const [plans, setPlans] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -30,23 +32,13 @@ const MembershipPlans = () => {
     features: '',
   });
 
-  // Fetch plans on component mount
-  useEffect(() => {
-    fetchPlans();
-  }, []);
+  // React Query hooks
+  const { data: plans = [], isLoading: loading } = useMembershipPlans();
+  const createMutation = useCreateMembershipPlan();
+  const updateMutation = useUpdateMembershipPlan();
+  const deleteMutation = useDeleteMembershipPlan();
 
-  const fetchPlans = async () => {
-    try {
-      setLoading(true);
-      const data = await membershipPlanService.getAll();
-      setPlans(data || []);
-    } catch (error) {
-      console.error('Error fetching plans:', error);
-      Toast.error(`Failed to load membership plans: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const isSubmitting = createMutation.isLoading || updateMutation.isLoading;
 
   // Transform API data to component format
   const transformPlan = (apiPlan) => {
@@ -119,40 +111,35 @@ const MembershipPlans = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+
+    // Convert features string to array
+    const featuresArray = formData.features
+      .split('\n')
+      .map(f => f.trim())
+      .filter(f => f.length > 0);
+
+    const planData = {
+      planName: formData.planName,
+      price: parseFloat(formData.price),
+      planPeriod: parseInt(formData.planPeriod),
+      planInterval: formData.planInterval,
+      features: featuresArray,
+    };
 
     try {
-      // Convert features string to array
-      const featuresArray = formData.features
-        .split('\n')
-        .map(f => f.trim())
-        .filter(f => f.length > 0);
-
-      const planData = {
-        planName: formData.planName,
-        price: parseFloat(formData.price),
-        planPeriod: parseInt(formData.planPeriod),
-        planInterval: formData.planInterval,
-        features: featuresArray,
-      };
-
       if (selectedPlan) {
         // Update existing plan
-        await membershipPlanService.update(selectedPlan.id, planData);
-        Toast.success('Membership plan updated successfully');
+        await updateMutation.mutateAsync({ id: selectedPlan.id, data: planData });
       } else {
         // Create new plan
-        await membershipPlanService.create(planData);
-        Toast.success('Membership plan created successfully');
+        await createMutation.mutateAsync(planData);
       }
 
       handleCloseModal();
-      fetchPlans();
+      // React Query automatically invalidates and refetches
     } catch (error) {
+      // Error already handled in mutation hooks
       console.error('Error saving plan:', error);
-      Toast.error(error.message || 'Failed to save membership plan');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -164,15 +151,15 @@ const MembershipPlans = () => {
     }
 
     try {
-      await membershipPlanService.delete(planId);
+      await deleteMutation.mutateAsync(planId);
       Alert.success('Deleted!', 'Membership plan has been deleted.', {
         timer: 2000,
         showConfirmButton: false
       });
-      fetchPlans();
+      // React Query automatically invalidates and refetches
     } catch (error) {
+      // Error already handled in mutation hook
       console.error('Error deleting plan:', error);
-      Alert.error('Error!', error.message || 'Failed to delete membership plan');
     }
   };
 

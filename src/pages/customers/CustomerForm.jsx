@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Modal } from '../../components/common';
 import { Toast } from '../../utils/alert';
-import { customerService } from '../../services/customerService';
+import { useCreateCustomer, useUpdateCustomer } from '../../hooks/useCustomers';
 
 const CustomerForm = ({
   isOpen,
@@ -14,7 +14,12 @@ const CustomerForm = ({
   onSaveSuccess,
 }) => {
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // React Query mutations
+  const createMutation = useCreateCustomer();
+  const updateMutation = useUpdateCustomer();
+  
+  const isSubmitting = createMutation.isLoading || updateMutation.isLoading;
 
   // Validation functions
   const validateEmail = (email) => {
@@ -65,41 +70,37 @@ const CustomerForm = ({
       return;
     }
 
-    setIsSubmitting(true);
+    const customerData = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      gender: formData.gender || 'Male',
+      dateOfBirth: formData.dateOfBirth,
+      photo: formData.photo || null,
+      phoneNumber: formData.phoneNumber,
+      email: formData.email || null,
+      address: formData.address || null,
+      medicalNotes: formData.medicalNotes || null,
+      emergencyContactName: formData.emergencyContactName || null,
+      emergencyContactPhone: formData.emergencyContactPhone || null,
+      bloodType: formData.bloodType || null,
+      allergies: formData.allergies || null,
+      currentMedications: formData.currentMedications || null,
+      medicalConditions: formData.medicalConditions || null,
+      doctorName: formData.doctorName || null,
+      doctorPhone: formData.doctorPhone || null,
+      insuranceProvider: formData.insuranceProvider || null,
+      insurancePolicyNumber: formData.insurancePolicyNumber || null,
+      emergencyContactRelationship: formData.emergencyContactRelationship || null,
+      emergencyContactAddress: formData.emergencyContactAddress || null,
+    };
 
     try {
-      const customerData = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        gender: formData.gender || 'Male',
-        dateOfBirth: formData.dateOfBirth,
-        photo: formData.photo || null,
-        phoneNumber: formData.phoneNumber,
-        email: formData.email || null,
-        address: formData.address || null,
-        medicalNotes: formData.medicalNotes || null,
-        emergencyContactName: formData.emergencyContactName || null,
-        emergencyContactPhone: formData.emergencyContactPhone || null,
-        bloodType: formData.bloodType || null,
-        allergies: formData.allergies || null,
-        currentMedications: formData.currentMedications || null,
-        medicalConditions: formData.medicalConditions || null,
-        doctorName: formData.doctorName || null,
-        doctorPhone: formData.doctorPhone || null,
-        insuranceProvider: formData.insuranceProvider || null,
-        insurancePolicyNumber: formData.insurancePolicyNumber || null,
-        emergencyContactRelationship: formData.emergencyContactRelationship || null,
-        emergencyContactAddress: formData.emergencyContactAddress || null,
-      };
-
       if (selectedCustomer) {
         // Update existing customer
-        await customerService.update(selectedCustomer.id, customerData);
-        Toast.success('Customer updated successfully');
+        await updateMutation.mutateAsync({ id: selectedCustomer.id, data: customerData });
       } else {
         // Create new customer
-        await customerService.create(customerData);
-        Toast.success('Customer created successfully');
+        await createMutation.mutateAsync(customerData);
       }
 
       onClose();
@@ -107,10 +108,8 @@ const CustomerForm = ({
         onSaveSuccess();
       }
     } catch (error) {
+      // Error already handled in mutation hooks
       console.error('Error saving customer:', error);
-      Toast.error(error.message || 'Failed to save customer');
-    } finally {
-      setIsSubmitting(false);
     }
   };
   return (

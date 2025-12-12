@@ -49,15 +49,12 @@ import {
   mockMembershipPlans,
   appointmentTypes,
 } from '../../data/mockData';
-import { customerService } from '../../services/customerService';
-import { Toast } from '../../utils/alert';
+import { useCustomer } from '../../hooks/useCustomers';
 
 const CustomerProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('progress');
-  const [member, setMember] = useState(null);
-  const [loading, setLoading] = useState(true);
   
   // Modals
   const [showAddProgressModal, setShowAddProgressModal] = useState(false);
@@ -66,42 +63,28 @@ const CustomerProfile = () => {
   const [showAppointmentModal, setShowAppointmentModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
-  useEffect(() => {
-    fetchCustomer();
-  }, [id]);
+  // React Query hook
+  const { data: customer, isLoading: loading, error } = useCustomer(id);
 
-  const fetchCustomer = async () => {
-    try {
-      setLoading(true);
-      const customer = await customerService.getById(id);
-      if (customer) {
-        // Transform API customer data to match the expected format
-        setMember({
-          id: customer.id,
-          name: `${customer.firstName || ''} ${customer.lastName || ''}`.trim(),
-          firstName: customer.firstName,
-          lastName: customer.lastName,
-          email: customer.email || 'N/A',
-          phone: customer.phoneNumber || 'N/A',
-          avatar: customer.photo,
-          membership: 'N/A', // Will be added when membership is integrated
-          membershipStatus: 'active', // Will be added when membership is integrated
-          membershipExpiry: 'N/A', // Will be added when membership is integrated
-          joinDate: customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : 'N/A',
-          trainer: null, // Will be added when trainer assignment is integrated
-          balance: 0, // Will be added when payment system is integrated
-          totalVisits: 0, // Will be added when check-in system is integrated
-          // Include all customer fields
-          ...customer,
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching customer:', error);
-      Toast.error(`Failed to load customer: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Transform customer data to match expected format
+  const member = customer ? {
+    id: customer.id,
+    name: `${customer.firstName || ''} ${customer.lastName || ''}`.trim(),
+    firstName: customer.firstName,
+    lastName: customer.lastName,
+    email: customer.email || 'N/A',
+    phone: customer.phoneNumber || 'N/A',
+    avatar: customer.photo,
+    membership: 'N/A', // Will be added when membership is integrated
+    membershipStatus: 'active', // Will be added when membership is integrated
+    membershipExpiry: 'N/A', // Will be added when membership is integrated
+    joinDate: customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : 'N/A',
+    trainer: null, // Will be added when trainer assignment is integrated
+    balance: 0, // Will be added when payment system is integrated
+    totalVisits: 0, // Will be added when check-in system is integrated
+    // Include all customer fields
+    ...customer,
+  } : null;
 
   if (loading) {
     return (

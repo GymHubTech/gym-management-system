@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import { Avatar, Badge } from '../../components/common';
@@ -15,42 +15,26 @@ import {
   ChevronLeft,
   Download,
 } from 'lucide-react';
-import { customerService } from '../../services/customerService';
-import { Alert, Toast } from '../../utils/alert';
+import { Alert } from '../../utils/alert';
 import { getInitialCustomerFormData, mapCustomerToFormData } from '../../models/customerModel';
 import CustomerForm from './CustomerForm';
+import { useCustomers, useDeleteCustomer } from '../../hooks/useCustomers';
 
 const CustomerList = () => {
   const navigate = useNavigate();
-  const [customers, setCustomers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [pagination, setPagination] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-
-  // Form state
   const [formData, setFormData] = useState(getInitialCustomerFormData());
 
-  // Fetch customers on component mount and when page changes
-  useEffect(() => {
-    fetchCustomers();
-  }, [currentPage]);
+  // React Query hooks
+  const { data, isLoading, error } = useCustomers(currentPage);
+  const deleteCustomerMutation = useDeleteCustomer();
 
-  const fetchCustomers = async () => {
-    try {
-      setLoading(true);
-      const result = await customerService.getAll(currentPage);
-      setCustomers(result.data || []);
-      setPagination(result.pagination);
-    } catch (error) {
-      console.error('Error fetching customers:', error);
-      Toast.error(`Failed to load customers: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const customers = data?.data || [];
+  const pagination = data?.pagination || null;
+  const loading = isLoading;
 
   // Format date to human readable format
   const formatDate = (dateString) => {
@@ -111,7 +95,8 @@ const CustomerList = () => {
   };
 
   const handleSaveSuccess = () => {
-    fetchCustomers();
+    // React Query automatically invalidates and refetches
+    // No manual refresh needed!
   };
 
   const handleDeleteCustomer = async (customerId) => {
@@ -122,15 +107,15 @@ const CustomerList = () => {
     }
 
     try {
-      await customerService.delete(customerId);
+      await deleteCustomerMutation.mutateAsync(customerId);
       Alert.success('Deleted!', 'Customer has been deleted.', {
         timer: 2000,
         showConfirmButton: false
       });
-      fetchCustomers();
+      // React Query automatically invalidates and refetches
     } catch (error) {
+      // Error already handled in mutation
       console.error('Error deleting customer:', error);
-      Alert.error('Error!', error.message || 'Failed to delete customer');
     }
   };
 
