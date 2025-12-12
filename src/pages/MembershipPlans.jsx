@@ -120,18 +120,20 @@ const MembershipPlans = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Convert features string to array
+    // Convert features string to array, ensure it's always an array (even if empty)
     const featuresArray = formData.features
-      .split('\n')
-      .map(f => f.trim())
-      .filter(f => f.length > 0);
+      ? formData.features
+          .split('\n')
+          .map(f => f.trim())
+          .filter(f => f.length > 0)
+      : [];
 
     const planData = {
       planName: formData.planName,
       price: parseFloat(formData.price),
       planPeriod: parseInt(formData.planPeriod),
       planInterval: formData.planInterval,
-      features: featuresArray,
+      features: featuresArray.length > 0 ? featuresArray : [], // Always send as array, even if empty
     };
 
     try {
