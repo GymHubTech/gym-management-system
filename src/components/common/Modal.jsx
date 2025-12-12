@@ -34,7 +34,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div
-          className={`relative bg-white rounded-2xl shadow-xl ${sizeClasses[size]} w-full h-[90vh] flex flex-col transform transition-all`}
+          className={`relative bg-white rounded-2xl shadow-xl ${sizeClasses[size]} w-full max-h-[90vh] flex flex-col transform transition-all`}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-dark-100 flex-shrink-0">
@@ -47,8 +47,8 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
             </button>
           </div>
 
-          {/* Content - Non-scrollable */}
-          <div className="px-6 py-4 overflow-y-auto flex-1">{children}</div>
+          {/* Content - Scrollable if needed */}
+          <div className="px-6 py-4 overflow-y-auto flex-1 min-h-0">{children}</div>
         </div>
       </div>
     </div>
