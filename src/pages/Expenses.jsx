@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import Layout from '../components/layout/Layout';
 import { Badge, Modal } from '../components/common';
 import {
@@ -20,6 +22,7 @@ import {
   useUpdateExpense, 
   useDeleteExpense 
 } from '../hooks/useExpenses';
+import { formatDate, formatDateForInput, formatCurrency } from '../utils/formatters';
 
 const Expenses = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -44,27 +47,6 @@ const Expenses = () => {
   const deleteMutation = useDeleteExpense();
 
   const isSubmitting = createMutation.isLoading || updateMutation.isLoading;
-
-  // Format date to human readable format
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
-  // Format date to YYYY-MM-DD for date input field
-  const formatDateForInput = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
 
   // Transform API data to component format
   const transformedExpenses = useMemo(() => {
@@ -302,7 +284,7 @@ const Expenses = () => {
                     <td className="table-cell font-medium">{expense.description}</td>
                     <td className="table-cell">
                       <span className="font-semibold text-dark-800">
-                        ₱{expense.amount.toLocaleString()}
+                        {formatCurrency(expense.amount)}
                       </span>
                     </td>
                     <td className="table-cell">
@@ -423,12 +405,25 @@ const Expenses = () => {
             </div>
             <div>
               <label className="label">Date</label>
-              <input
-                type="date"
-                className="input"
-                value={formData.expenseDate}
-                onChange={(e) => setFormData({ ...formData, expenseDate: e.target.value })}
-                required
+              <DatePicker
+                selected={formData.expenseDate ? new Date(formData.expenseDate) : null}
+                onChange={(date) => {
+                  const dateString = date ? date.toISOString().split('T')[0] : '';
+                  setFormData({ ...formData, expenseDate: dateString });
+                }}
+                dateFormat="yyyy-MM-dd"
+                placeholderText="Click to select date"
+                className="input w-full"
+                showYearDropdown
+                showMonthDropdown
+                dropdownMode="select"
+                maxDate={new Date()}
+                isClearable
+                onKeyDown={(e) => {
+                  if (e && e.key && e.key !== 'Tab' && e.key !== 'Escape') {
+                    e.preventDefault();
+                  }
+                }}
               />
             </div>
           </div>

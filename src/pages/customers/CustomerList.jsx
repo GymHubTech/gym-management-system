@@ -19,6 +19,7 @@ import { Alert } from '../../utils/alert';
 import { getInitialCustomerFormData, mapCustomerToFormData } from '../../models/customerModel';
 import CustomerForm from './CustomerForm';
 import { useCustomers, useDeleteCustomer } from '../../hooks/useCustomers';
+import { formatDate, formatCurrency } from '../../utils/formatters';
 
 const CustomerList = () => {
   const navigate = useNavigate();
@@ -36,26 +37,43 @@ const CustomerList = () => {
   const pagination = data?.pagination || null;
   const loading = isLoading;
 
-  // Format date to human readable format
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
+  // Calculate membership stats
+  const membershipStats = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const fifteenDaysFromNow = new Date();
+    fifteenDaysFromNow.setDate(today.getDate() + 15);
+    fifteenDaysFromNow.setHours(23, 59, 59, 999);
 
-  // Format date to YYYY-MM-DD for date input field
-  const formatDateForInput = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
+    let active = 0;
+    let expiringSoon = 0;
+    let expired = 0;
+
+    customers.forEach((customer) => {
+      const membership = customer.currentMembership;
+      
+      if (!membership) return;
+
+      const endDate = new Date(membership.membershipEndDate);
+      endDate.setHours(0, 0, 0, 0);
+      
+      const isActive = membership.status === 'active' && endDate >= today;
+      const isExpired = endDate < today || membership.status === 'expired';
+      const isExpiringSoon = isActive && endDate <= fifteenDaysFromNow && endDate >= today;
+
+      if (isActive) {
+        active++;
+        if (isExpiringSoon) {
+          expiringSoon++;
+        }
+      } else if (isExpired) {
+        expired++;
+      }
+    });
+
+    return { active, expiringSoon, expired };
+  }, [customers]);
 
   // Filter customers (client-side filtering for search)
   const filteredCustomers = useMemo(() => {
@@ -79,7 +97,7 @@ const CustomerList = () => {
     if (customer) {
       // Edit mode
       setSelectedCustomer(customer);
-      setFormData(mapCustomerToFormData(customer, formatDateForInput));
+      setFormData(mapCustomerToFormData(customer));
     } else {
       // Create mode
       setSelectedCustomer(null);
@@ -143,15 +161,15 @@ const CustomerList = () => {
         </div>
         <div className="card bg-gradient-to-br from-success-500 to-success-600 text-white">
           <p className="text-success-100 text-sm">Active</p>
-          <p className="text-3xl font-bold mt-1">0</p>
+          <p className="text-3xl font-bold mt-1">{membershipStats.active}</p>
         </div>
         <div className="card bg-gradient-to-br from-warning-500 to-warning-600 text-white">
           <p className="text-warning-100 text-sm">Expiring Soon</p>
-          <p className="text-3xl font-bold mt-1">0</p>
+          <p className="text-3xl font-bold mt-1">{membershipStats.expiringSoon}</p>
         </div>
         <div className="card bg-gradient-to-br from-danger-500 to-danger-600 text-white">
           <p className="text-danger-100 text-sm">Expired</p>
-          <p className="text-3xl font-bold mt-1">0</p>
+          <p className="text-3xl font-bold mt-1">{membershipStats.expired}</p>
         </div>
       </div>
 
@@ -194,9 +212,10 @@ const CustomerList = () => {
               <tr className="bg-dark-50">
                 <th className="table-header">Customer</th>
                 <th className="table-header">Contact</th>
-                <th className="table-header">Gender</th>
-                <th className="table-header">Date of Birth</th>
                 <th className="table-header">Address</th>
+                <th className="table-header">Membership</th>
+                <th className="table-header">Trainer</th>
+                <th className="table-header">Balance</th>
                 <th className="table-header">Actions</th>
               </tr>
             </thead>
@@ -241,25 +260,42 @@ const CustomerList = () => {
                     </div>
                   </td>
                   <td className="table-cell">
-                      {customer.gender ? (
-                        <Badge variant="default">{customer.gender}</Badge>
-                      ) : (
-                        <span className="text-dark-400">-</span>
-                      )}
+                      <span className="text-sm text-dark-600">
+                        {customer.address || '-'}
+                      </span>
                   </td>
                   <td className="table-cell">
-                      {customer.dateOfBirth ? (
-                        <div className="flex items-center gap-1 text-sm text-dark-600">
-                          <Calendar className="w-3.5 h-3.5 text-dark-400" />
-                          {formatDate(customer.dateOfBirth)}
+                      {customer.currentMembership?.membershipPlan ? (
+                        <div className="space-y-1">
+                          <span className="text-sm font-medium text-dark-800">
+                            {customer.currentMembership.membershipPlan.planName}
+                          </span>
+                          <p className="text-xs text-dark-400 flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            Expires: {formatDate(customer.currentMembership.membershipEndDate)}
+                          </p>
+                          <div>
+                            <Badge variant={customer.currentMembership.status === 'active' ? 'success' : 'default'}>
+                              {customer.currentMembership.status?.charAt(0).toUpperCase() + customer.currentMembership.status?.slice(1)}
+                            </Badge>
+                          </div>
                         </div>
                       ) : (
                         <span className="text-dark-400">-</span>
                       )}
                   </td>
                   <td className="table-cell">
+                      {customer.currentTrainer ? (
+                        <span className="text-sm text-dark-600">
+                          {customer.currentTrainer.name}
+                        </span>
+                      ) : (
+                        <span className="text-dark-400">-</span>
+                      )}
+                  </td>
+                  <td className="table-cell">
                       <span className="text-sm text-dark-600">
-                        {customer.address || '-'}
+                        {formatCurrency(customer.balance)}
                       </span>
                   </td>
                   <td className="table-cell">

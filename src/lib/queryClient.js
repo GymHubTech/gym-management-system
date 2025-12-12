@@ -7,8 +7,8 @@ import { QueryClient } from '@tanstack/react-query';
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes - data is fresh for 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes - keep in cache for 10 minutes
+      staleTime: 60 * 60 * 1000, // 1 hour - data is fresh for 1 hour
+      cacheTime: 2 * 60 * 60 * 1000, // 2 hours - keep in cache for 2 hours
       refetchOnWindowFocus: false, // Don't refetch when window regains focus
       retry: 1, // Retry failed requests once
     },

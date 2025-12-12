@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Modal } from '../../components/common';
 import { Toast } from '../../utils/alert';
 import { useCreateCustomer, useUpdateCustomer } from '../../hooks/useCustomers';
+import { useMembershipPlans } from '../../hooks/useMembershipPlans';
+import { customerService } from '../../services/customerService';
 
 const CustomerForm = ({
   isOpen,
@@ -14,12 +16,28 @@ const CustomerForm = ({
   onSaveSuccess,
 }) => {
   const [errors, setErrors] = useState({});
+  const [trainers, setTrainers] = useState([]);
   
-  // React Query mutations
+  // React Query mutations and queries
   const createMutation = useCreateCustomer();
   const updateMutation = useUpdateCustomer();
+  const { data: membershipPlans = [] } = useMembershipPlans();
   
   const isSubmitting = createMutation.isLoading || updateMutation.isLoading;
+
+  // Fetch trainers on component mount
+  useEffect(() => {
+    const fetchTrainers = async () => {
+      try {
+        const trainersData = await customerService.getTrainers();
+        setTrainers(trainersData);
+      } catch (error) {
+        console.error('Error fetching trainers:', error);
+        Toast.error('Failed to load trainers');
+      }
+    };
+    fetchTrainers();
+  }, []);
 
   // Validation functions
   const validateEmail = (email) => {
@@ -92,6 +110,11 @@ const CustomerForm = ({
       insurancePolicyNumber: formData.insurancePolicyNumber || null,
       emergencyContactRelationship: formData.emergencyContactRelationship || null,
       emergencyContactAddress: formData.emergencyContactAddress || null,
+      // Only include membership and trainer when creating new customer
+      ...(selectedCustomer ? {} : {
+        membershipPlanId: formData.membershipPlanId || null,
+        currentTrainerId: formData.currentTrainerId || null,
+      }),
     };
 
     try {
@@ -352,6 +375,55 @@ const CustomerForm = ({
           </div>
         </div>
 
+        {/* Membership - Only show when creating new customer */}
+        {!selectedCustomer && (
+          <div className="border-b border-dark-200 pb-6">
+            <h3 className="text-lg font-semibold text-dark-800 mb-4">Membership & Trainer</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="label">Membership Plan</label>
+                <select
+                  className="input"
+                  value={formData.membershipPlanId}
+                  onChange={(e) => {
+                    setFormData({ 
+                      ...formData, 
+                      membershipPlanId: e.target.value,
+                    });
+                  }}
+                >
+                  <option value="">No membership plan</option>
+                  {membershipPlans.map((plan) => (
+                    <option key={plan.id} value={plan.id}>
+                      {plan.planName} - ₱{parseFloat(plan.price).toLocaleString()}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className="label">Trainer</label>
+                <select
+                  className="input"
+                  value={formData.currentTrainerId}
+                  onChange={(e) => {
+                    setFormData({ 
+                      ...formData, 
+                      currentTrainerId: e.target.value,
+                    });
+                  }}
+                >
+                  <option value="">No trainer</option>
+                  {trainers.map((trainer) => (
+                    <option key={trainer.id} value={trainer.id}>
+                      {trainer.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Health & Emergency */}
         <div>
           <h3 className="text-lg font-semibold text-dark-800 mb-4">Health & Emergency</h3>

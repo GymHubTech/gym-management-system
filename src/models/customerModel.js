@@ -3,6 +3,8 @@
  * Defines the structure and initial state for customer form data
  */
 
+import { formatDateForInput } from '../utils/formatters';
+
 /**
  * Get initial customer form data
  * @returns {Object} Initial form state
@@ -29,22 +31,23 @@ export const getInitialCustomerFormData = () => ({
   insurancePolicyNumber: '',
   emergencyContactRelationship: '',
   emergencyContactAddress: '',
+  membershipPlanId: '',
+  currentTrainerId: '',
 });
 
 /**
  * Map customer data from API to form data
  * @param {Object} customer - Customer object from API
- * @param {Function} formatDateForInput - Function to format date for input field
  * @returns {Object} Form data object
  */
-export const mapCustomerToFormData = (customer, formatDateForInput) => {
+export const mapCustomerToFormData = (customer) => {
   if (!customer) return getInitialCustomerFormData();
   
   return {
     firstName: customer.firstName || '',
     lastName: customer.lastName || '',
     gender: customer.gender || '',
-    dateOfBirth: formatDateForInput ? formatDateForInput(customer.dateOfBirth) : (customer.dateOfBirth || ''),
+    dateOfBirth: formatDateForInput(customer.dateOfBirth),
     photo: customer.photo || '',
     phoneNumber: customer.phoneNumber || '',
     email: customer.email || '',
@@ -62,6 +65,8 @@ export const mapCustomerToFormData = (customer, formatDateForInput) => {
     insurancePolicyNumber: customer.insurancePolicyNumber || '',
     emergencyContactRelationship: customer.emergencyContactRelationship || '',
     emergencyContactAddress: customer.emergencyContactAddress || '',
+    membershipPlanId: customer.currentMembership?.membershipPlanId?.toString() || '',
+    currentTrainerId: customer.currentTrainer?.id?.toString() || '',
   };
 };
 

@@ -18,6 +18,7 @@ import {
   useUpdateMembershipPlan, 
   useDeleteMembershipPlan 
 } from '../hooks/useMembershipPlans';
+import { formatCurrency } from '../utils/formatters';
 
 const MembershipPlans = () => {
   const [showModal, setShowModal] = useState(false);
@@ -58,7 +59,7 @@ const MembershipPlans = () => {
       durationUnit: intervalMap[apiPlan.planInterval] || apiPlan.planInterval,
       features: Array.isArray(apiPlan.features) ? apiPlan.features : [],
       popular: false, // This field doesn't exist in API, can be added later
-      activeMembers: 0, // This field doesn't exist in API, can be added later
+      activeMembers: apiPlan.activeMembersCount || 0, // Real data from API
     };
   };
 
@@ -69,6 +70,13 @@ const MembershipPlans = () => {
     (sum, plan) => sum + plan.price * plan.activeMembers,
     0
   );
+  
+  // Find the most popular plan (plan with the most active members)
+  const mostPopularPlan = transformedPlans.length > 0
+    ? transformedPlans.reduce((prev, current) => 
+        (prev.activeMembers > current.activeMembers) ? prev : current
+      )
+    : null;
 
   const handleOpenModal = (plan = null) => {
     if (plan) {
@@ -203,7 +211,7 @@ const MembershipPlans = () => {
             <div>
               <p className="text-accent-100 text-sm">Est. Monthly Revenue</p>
               <p className="text-3xl font-bold mt-1">
-                ₱{monthlyRevenue.toLocaleString()}
+                {formatCurrency(monthlyRevenue)}
               </p>
             </div>
             <DollarSign className="w-10 h-10 text-accent-200" />
@@ -214,7 +222,9 @@ const MembershipPlans = () => {
             <div>
               <p className="text-warning-100 text-sm">Most Popular</p>
               <p className="text-xl font-bold mt-1">
-                {transformedPlans.find(p => p.popular)?.name || 'N/A'}
+                {mostPopularPlan && mostPopularPlan.activeMembers > 0
+                  ? `${mostPopularPlan.name}`
+                  : 'N/A'}
               </p>
             </div>
             <Star className="w-10 h-10 text-warning-200" />
@@ -252,7 +262,7 @@ const MembershipPlans = () => {
               <h3 className="text-xl font-bold text-dark-800">{plan.name}</h3>
               <div className="flex items-baseline gap-1 mt-2">
                 <span className="text-4xl font-bold text-primary-600">
-                  ₱{plan.price}
+                  {formatCurrency(plan.price)}
                 </span>
                 <span className="text-dark-500">
                   / {plan.duration} {plan.durationUnit}

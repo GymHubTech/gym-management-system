@@ -25,6 +25,7 @@ export const expenseCategoryKeys = {
 
 /**
  * Hook to fetch all expenses
+ * Uses global default staleTime: 1 hour
  */
 export const useExpenses = () => {
   return useQuery({
@@ -37,6 +38,7 @@ export const useExpenses = () => {
 
 /**
  * Hook to fetch all expense categories
+ * Uses global default staleTime: 1 hour
  */
 export const useExpenseCategories = () => {
   return useQuery({

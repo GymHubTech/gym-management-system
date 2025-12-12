@@ -158,5 +158,34 @@ export const customerService = {
     const data = await response.json();
     return data.success;
   },
+
+  /**
+   * Get all trainers
+   * @returns {Promise<Array>}
+   */
+  async getTrainers() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/customers/trainers`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.success ? data.data : [];
+    } catch (error) {
+      if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+        throw new Error('Cannot connect to API. Please check if the server is running and CORS is configured.');
+      }
+      throw error;
+    }
+  },
 };
 

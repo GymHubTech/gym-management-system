@@ -15,6 +15,7 @@ export const membershipPlanKeys = {
 
 /**
  * Hook to fetch all membership plans
+ * Uses global default staleTime: 1 hour
  */
 export const useMembershipPlans = () => {
   return useQuery({

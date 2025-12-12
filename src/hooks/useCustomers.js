@@ -40,6 +40,7 @@ export const useCustomer = (id) => {
       return await customerService.getById(id);
     },
     enabled: !!id, // Only run query if id exists
+    // Uses global default staleTime: 1 hour
   });
 };
 
@@ -74,10 +75,26 @@ export const useUpdateCustomer = () => {
     mutationFn: async ({ id, data }) => {
       return await customerService.update(id, data);
     },
-    onSuccess: (data, variables) => {
-      // Invalidate customers list and specific customer detail
+    onSuccess: async (updatedCustomer, variables) => {
+      // Update the cache with the returned data immediately
+      if (updatedCustomer) {
+        queryClient.setQueryData(customerKeys.detail(variables.id), updatedCustomer);
+      }
+      
+      // Invalidate to mark as stale and trigger refetch if query is active
+      queryClient.invalidateQueries({ 
+        queryKey: customerKeys.detail(variables.id),
+        exact: true
+      });
+      
+      // Force refetch to ensure we have the latest data
+      await queryClient.refetchQueries({ 
+        queryKey: customerKeys.detail(variables.id),
+        exact: true
+      });
+      
+      // Also invalidate the list to keep it in sync
       queryClient.invalidateQueries({ queryKey: customerKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: customerKeys.detail(variables.id) });
       Toast.success('Customer updated successfully');
     },
     onError: (error) => {
