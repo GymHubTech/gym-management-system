@@ -42,7 +42,6 @@ import {
   Area,
 } from 'recharts';
 import {
-  mockMembers,
   mockPayments,
   mockProgressLogs,
   mockAppointments,
@@ -50,12 +49,15 @@ import {
   mockMembershipPlans,
   appointmentTypes,
 } from '../../data/mockData';
+import { customerService } from '../../services/customerService';
+import { Toast } from '../../utils/alert';
 
 const CustomerProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('progress');
   const [member, setMember] = useState(null);
+  const [loading, setLoading] = useState(true);
   
   // Modals
   const [showAddProgressModal, setShowAddProgressModal] = useState(false);
@@ -65,11 +67,51 @@ const CustomerProfile = () => {
   const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
-    const foundMember = mockMembers.find((m) => m.id === parseInt(id));
-    if (foundMember) {
-      setMember(foundMember);
-    }
+    fetchCustomer();
   }, [id]);
+
+  const fetchCustomer = async () => {
+    try {
+      setLoading(true);
+      const customer = await customerService.getById(id);
+      if (customer) {
+        // Transform API customer data to match the expected format
+        setMember({
+          id: customer.id,
+          name: `${customer.firstName || ''} ${customer.lastName || ''}`.trim(),
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+          email: customer.email || 'N/A',
+          phone: customer.phoneNumber || 'N/A',
+          avatar: customer.photo,
+          membership: 'N/A', // Will be added when membership is integrated
+          membershipStatus: 'active', // Will be added when membership is integrated
+          membershipExpiry: 'N/A', // Will be added when membership is integrated
+          joinDate: customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : 'N/A',
+          trainer: null, // Will be added when trainer assignment is integrated
+          balance: 0, // Will be added when payment system is integrated
+          totalVisits: 0, // Will be added when check-in system is integrated
+          // Include all customer fields
+          ...customer,
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching customer:', error);
+      Toast.error(`Failed to load customer: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Layout title="Loading...">
+        <div className="card text-center py-12">
+          <p className="text-dark-500">Loading customer profile...</p>
+        </div>
+      </Layout>
+    );
+  }
 
   if (!member) {
     return (
