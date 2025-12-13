@@ -9,7 +9,6 @@ import {
   CalendarDays,
   Receipt,
   FileBarChart,
-  Dumbbell,
   UserCog,
   Wallet,
   Settings,
@@ -57,7 +56,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
             { path: '/reports/expense', label: 'Expense Report' },
           ],
         },
-        { path: '/settings', icon: Settings, label: 'Settings' },
+        // { path: '/settings', icon: Settings, label: 'Settings' },
       ],
     },
   ];
@@ -78,7 +77,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       section: 'ACCOUNT',
       items: [
         { path: '/reports/my-collection', icon: Wallet, label: 'My Collection' },
-        { path: '/settings', icon: Settings, label: 'Settings' },
+        // { path: '/settings', icon: Settings, label: 'Settings' },
       ],
     },
   ];
@@ -102,17 +101,23 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       }`}
     >
       {/* Logo */}
-      <div className="flex items-center justify-between px-4 py-5 border-b border-dark-100">
-        <div className={`flex items-center gap-3 ${isCollapsed ? 'justify-center w-full' : ''}`}>
-          <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center flex-shrink-0">
-            <Dumbbell className="w-6 h-6 text-white" />
+      <div
+        className={`flex items-center border-b border-dark-100 ${
+          isCollapsed ? 'px-2 py-4 justify-center' : 'px-4 py-5 justify-center'
+        }`}
+      >
+        <div className={`flex items-center ${isCollapsed ? 'justify-center w-full' : 'justify-center w-full'}`}>
+          <div
+            className={`overflow-hidden flex items-center justify-center flex-shrink-0 bg-white ${
+              isCollapsed ? 'w-16 h-16 rounded-xl' : 'w-40 h-20 rounded-2xl'
+            }`}
+          >
+            <img
+              src="/img/logo.png"
+              alt="Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
-          {!isCollapsed && (
-            <div>
-              <h1 className="text-lg font-bold text-dark-800">FitPro Gym</h1>
-              <p className="text-xs text-dark-400">{isAdmin ? 'Admin Panel' : 'Trainer Panel'}</p>
-            </div>
-          )}
         </div>
       </div>
 

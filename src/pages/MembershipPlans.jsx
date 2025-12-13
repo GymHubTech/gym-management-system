@@ -8,8 +8,9 @@ import {
   Check,
   Star,
   Users,
-  DollarSign,
+  PhilippinePeso,
   Award,
+  Eye,
 } from 'lucide-react';
 import { Alert } from '../utils/alert';
 import { 
@@ -22,7 +23,9 @@ import { formatCurrency } from '../utils/formatters';
 
 const MembershipPlans = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const [detailsPlan, setDetailsPlan] = useState(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -173,6 +176,16 @@ const MembershipPlans = () => {
     }
   };
 
+  const handleViewDetails = (plan) => {
+    setDetailsPlan(plan);
+    setShowDetailsModal(true);
+  };
+
+  const handleCloseDetailsModal = () => {
+    setShowDetailsModal(false);
+    setDetailsPlan(null);
+  };
+
   if (loading) {
     return (
       <Layout title="Membership Plans" subtitle="Manage gym membership packages and pricing">
@@ -216,7 +229,7 @@ const MembershipPlans = () => {
                 {formatCurrency(monthlyRevenue)}
               </p>
             </div>
-            <DollarSign className="w-10 h-10 text-accent-200" />
+            <PhilippinePeso className="w-10 h-10 text-accent-200" />
           </div>
         </div>
         <div className="card bg-gradient-to-br from-warning-500 to-warning-600 text-white">
@@ -250,7 +263,7 @@ const MembershipPlans = () => {
         {transformedPlans.map((plan) => (
           <div
             key={plan.id}
-            className={`card relative overflow-hidden ${
+            className={`card relative overflow-hidden flex flex-col ${
               plan.popular ? 'ring-2 ring-primary-500' : ''
             }`}
           >
@@ -267,13 +280,13 @@ const MembershipPlans = () => {
                   {formatCurrency(plan.price)}
                 </span>
                 <span className="text-dark-500">
-                  / {plan.duration} {plan.durationUnit}
+                  / {plan.duration} {plan.durationUnit}{plan.duration > 1 ? 's' : ''}
                 </span>
               </div>
             </div>
 
-            <div className="space-y-3 mb-6">
-              {plan.features.map((feature, index) => (
+            <div className="space-y-3 mb-6 flex-1">
+              {(plan.features.length >= 5 ? plan.features.slice(0, 4) : plan.features).map((feature, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <div className="w-5 h-5 bg-success-100 rounded-full flex items-center justify-center">
                     <Check className="w-3 h-3 text-success-600" />
@@ -281,9 +294,18 @@ const MembershipPlans = () => {
                   <span className="text-sm text-dark-600">{feature}</span>
                 </div>
               ))}
+              {plan.features.length >= 5 && (
+                <button
+                  onClick={() => handleViewDetails(plan)}
+                  className="w-full mt-2 text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center justify-center gap-1 transition-colors"
+                >
+                  <Eye className="w-4 h-4" />
+                  View More Details ({plan.features.length - 4} more)
+                </button>
+              )}
             </div>
 
-            <div className="pt-4 border-t border-dark-100">
+            <div className="pt-4 border-t border-dark-100 mt-auto">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 text-dark-500">
                   <Users className="w-4 h-4" />
@@ -405,6 +427,92 @@ const MembershipPlans = () => {
             </button>
           </div>
         </form>
+      </Modal>
+
+      {/* Plan Details Modal */}
+      <Modal
+        isOpen={showDetailsModal}
+        onClose={handleCloseDetailsModal}
+        title={detailsPlan ? detailsPlan.name : 'Membership Plan Details'}
+        size="lg"
+      >
+        {detailsPlan && (
+          <div className="space-y-6">
+            {/* Plan Header */}
+            <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-lg p-6">
+              <div className="flex items-baseline gap-2 mb-2">
+                <span className="text-4xl font-bold text-primary-600">
+                  {formatCurrency(detailsPlan.price)}
+                </span>
+                <span className="text-dark-500 text-lg">
+                  / {detailsPlan.duration} {detailsPlan.durationUnit}
+                  {detailsPlan.duration > 1 ? 's' : ''}
+                </span>
+              </div>
+              {detailsPlan.popular && (
+                <Badge variant="primary" className="mt-2">Popular Plan</Badge>
+              )}
+            </div>
+
+            {/* Plan Information */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-dark-50 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-dark-500 mb-1">
+                  <Users className="w-4 h-4" />
+                  <span className="text-sm font-medium">Active Members</span>
+                </div>
+                <p className="text-2xl font-bold text-dark-800">{detailsPlan.activeMembers}</p>
+              </div>
+              <div className="bg-dark-50 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-dark-500 mb-1">
+                  <PhilippinePeso className="w-4 h-4" />
+                  <span className="text-sm font-medium">Est. Revenue</span>
+                </div>
+                <p className="text-2xl font-bold text-dark-800">
+                  {formatCurrency(detailsPlan.price * detailsPlan.activeMembers)}
+                </p>
+              </div>
+            </div>
+
+            {/* All Features */}
+            <div>
+              <h3 className="text-lg font-semibold text-dark-800 mb-4">All Features</h3>
+              <div className="space-y-3">
+                {detailsPlan.features.map((feature, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-6 h-6 bg-success-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Check className="w-4 h-4 text-success-600" />
+                    </div>
+                    <span className="text-dark-700">{feature}</span>
+                  </div>
+                ))}
+                {detailsPlan.features.length === 0 && (
+                  <p className="text-dark-500 italic">No features listed for this plan.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-4 border-t border-dark-100">
+              <button
+                onClick={() => {
+                  handleCloseDetailsModal();
+                  handleOpenModal(detailsPlan);
+                }}
+                className="flex-1 btn-secondary flex items-center justify-center gap-2"
+              >
+                <Edit className="w-4 h-4" />
+                Edit Plan
+              </button>
+              <button
+                onClick={handleCloseDetailsModal}
+                className="flex-1 btn-primary"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
       </Modal>
     </Layout>
   );

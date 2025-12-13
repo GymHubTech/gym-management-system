@@ -152,14 +152,23 @@ const CustomerProfile = () => {
               </div>
               <div className="flex items-center gap-3 text-sm text-dark-500 flex-wrap">
                 {member.gender && <span>Gender: {member.gender}</span>}
+                {member.age && <span>• Age: {member.age} years old</span>}
                 {member.medicalConditions && (
-                  <span className="text-danger-600 font-medium">• Medical Conditions: {member.medicalConditions}</span>
+                  <span>• Medical Conditions: 
+                    <span className="text-danger-600 font-medium"> {member.medicalConditions}</span>
+                  </span>
                 )}
                 {member.allergies && (
-                  <span className="text-warning-600 font-medium">• Allergies: {member.allergies}</span>
+                  <span>• Allergies: 
+                    <span className="text-warning-600 font-medium"> {member.allergies}</span>
+                  </span>
                 )}
-                {member.age && <span>• Age: {member.age} years old</span>}
-                {member.membership && <span>• Membership: {member.membership}</span>}
+                {member.membership && (
+                  <span>
+                    • Membership:{' '}
+                    <span className="text-success-600 font-medium"> {member.membership}</span>
+                  </span>
+                )}
                 {member.trainer && <span>• Trainer: {member.trainer}</span>}
               </div>
             </div>

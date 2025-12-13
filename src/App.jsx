@@ -75,7 +75,7 @@ function App() {
             <Route path="/my-account" element={<MyAccount />} />
 
             {/* Settings */}
-            <Route path="/settings" element={<Settings />} />
+            {/* <Route path="/settings" element={<Settings />} /> */}
 
             {/* Catch all - redirect to dashboard */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
