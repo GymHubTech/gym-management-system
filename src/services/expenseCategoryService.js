@@ -130,4 +130,3 @@ export const expenseCategoryService = {
     return data.success;
   },
 };
-
