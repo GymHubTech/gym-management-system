@@ -31,8 +31,8 @@ export const getInitialCustomerFormData = () => ({
   insurancePolicyNumber: '',
   emergencyContactRelationship: '',
   emergencyContactAddress: '',
-  membershipPlanId: '',
-  currentTrainerId: '',
+    membershipPlanId: null,
+    currentTrainerId: null,
 });
 
 /**
@@ -65,8 +65,8 @@ export const mapCustomerToFormData = (customer) => {
     insurancePolicyNumber: customer.insurancePolicyNumber || '',
     emergencyContactRelationship: customer.emergencyContactRelationship || '',
     emergencyContactAddress: customer.emergencyContactAddress || '',
-    membershipPlanId: customer.currentMembership?.membershipPlanId?.toString() || '',
-    currentTrainerId: customer.currentTrainer?.id?.toString() || '',
+    membershipPlanId: customer.currentMembership?.membershipPlanId || null,
+    currentTrainerId: customer.currentTrainer?.id || null,
   };
 };
 

@@ -112,8 +112,8 @@ const CustomerForm = ({
       emergencyContactAddress: formData.emergencyContactAddress || null,
       // Only include membership and trainer when creating new customer
       ...(selectedCustomer ? {} : {
-        membershipPlanId: formData.membershipPlanId || null,
-        currentTrainerId: formData.currentTrainerId || null,
+        membershipPlanId: formData.membershipPlanId,
+        currentTrainerId: formData.currentTrainerId,
       }),
     };
 
