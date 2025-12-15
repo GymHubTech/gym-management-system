@@ -275,6 +275,12 @@ const CustomerProfile = () => {
         />
       )}
 
+      {activeTab === 'scans' && (
+        <ScansTab
+          member={member}
+        />
+      )}
+
       {activeTab === 'appointments' && (
         <AppointmentsTab
           member={member}
