@@ -1,8 +1,13 @@
 // injectConfig.js (Updated to read individual parameters from Remote Config)
 
-const fs = require('fs');
-const path = require('path');
-const admin = require('firebase-admin');
+import fs from 'fs';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import admin from 'firebase-admin';
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 async function generateConfig() {
     try {
