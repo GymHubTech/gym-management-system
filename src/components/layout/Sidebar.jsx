@@ -96,24 +96,24 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
 
   return (
     <aside
-      className={`fixed left-0 top-0 z-40 h-screen bg-white border-r border-dark-200 flex flex-col transition-all duration-300 ${
+      className={`fixed left-0 top-0 z-40 h-screen bg-dark-800 border-r border-dark-700 flex flex-col transition-all duration-300 ${
         isCollapsed ? 'w-20' : 'w-64'
       }`}
     >
       {/* Logo */}
       <div
-        className={`flex items-center border-b border-dark-100 ${
+        className={`flex items-center border-b border-dark-700 ${
           isCollapsed ? 'px-2 py-4 justify-center' : 'px-4 py-5 justify-center'
         }`}
       >
         <div className={`flex items-center ${isCollapsed ? 'justify-center w-full' : 'justify-center w-full'}`}>
           <div
-            className={`overflow-hidden flex items-center justify-center flex-shrink-0 bg-white ${
+            className={`overflow-hidden flex items-center justify-center flex-shrink-0 bg-transparent ${
               isCollapsed ? 'w-16 h-16 rounded-xl' : 'w-40 h-20 rounded-2xl'
             }`}
           >
             <img
-              src="/img/kaizen-logo.png"
+              src="/img/kaizen-logo2.png"
               alt="Kaizen Gym Logo"
               className="w-full h-full object-contain"
             />
@@ -124,7 +124,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       {/* Collapse Toggle */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-20 w-6 h-6 bg-white border border-dark-200 rounded-full flex items-center justify-center text-dark-400 hover:text-dark-600 hover:bg-dark-50 transition-colors shadow-sm"
+        className="absolute -right-3 top-20 w-6 h-6 bg-dark-800 border border-dark-700 rounded-full flex items-center justify-center text-dark-400 hover:text-dark-200 hover:bg-dark-700 transition-colors shadow-sm"
       >
         {isCollapsed ? (
           <ChevronRight className="w-4 h-4" />
@@ -139,12 +139,12 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
           <div key={section.section} className={sectionIndex > 0 ? 'mt-6' : ''}>
             {/* Section Header */}
             {!isCollapsed && (
-              <p className="px-4 mb-2 text-xs font-semibold text-dark-400 uppercase tracking-wider">
+              <p className="px-4 mb-2 text-xs font-semibold text-dark-500 uppercase tracking-wider">
                 {section.section}
               </p>
             )}
             {isCollapsed && sectionIndex > 0 && (
-              <div className="border-t border-dark-100 mb-4 mx-2" />
+              <div className="border-t border-dark-700 mb-4 mx-2" />
             )}
 
             <ul className="space-y-1">
@@ -185,7 +185,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                         )}
                       </button>
                       {!isCollapsed && expandedMenus.includes(item.key) && (
-                        <ul className="mt-1 ml-4 pl-4 border-l border-dark-200 space-y-1">
+                        <ul className="mt-1 ml-4 pl-4 border-l border-dark-700 space-y-1">
                           {item.children.map((child, childIndex) => (
                             <li key={childIndex}>
                               <NavLink
@@ -202,7 +202,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                       )}
                       {/* Collapsed submenu - show as tooltip/popup */}
                       {isCollapsed && expandedMenus.includes(item.key) && (
-                        <div className="absolute left-full ml-2 bg-white rounded-lg shadow-lg border border-dark-100 py-2 min-w-[180px] z-50">
+                        <div className="absolute left-full ml-2 bg-dark-800 rounded-lg shadow-lg border border-dark-700 py-2 min-w-[180px] z-50">
                           <p className="px-4 py-1 text-xs font-semibold text-dark-400 uppercase">
                             {item.label}
                           </p>
@@ -213,8 +213,8 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                               className={({ isActive }) =>
                                 `block px-4 py-2 text-sm ${
                                   isActive
-                                    ? 'text-primary-600 bg-primary-50'
-                                    : 'text-dark-600 hover:bg-dark-50'
+                                    ? 'text-primary-400 bg-primary-500/20'
+                                    : 'text-dark-300 hover:bg-dark-700'
                                 }`
                               }
                             >

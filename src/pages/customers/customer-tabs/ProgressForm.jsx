@@ -354,7 +354,7 @@ const ProgressForm = ({
                 <input 
                   type="number" 
                   step="0.1" 
-                  className="input bg-dark-50" 
+                  className="input bg-dark-700 text-dark-50" 
                   placeholder="--"
                   value={formData.bmi || ''}
                   readOnly
@@ -366,7 +366,7 @@ const ProgressForm = ({
 
           {/* Body Composition */}
           <div>
-            <h4 className="font-semibold text-dark-800 mb-3">Body Composition</h4>
+            <h4 className="font-semibold text-dark-50 mb-3">Body Composition</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
                 <label className="label">Muscle Mass (kg)</label>
@@ -384,7 +384,7 @@ const ProgressForm = ({
                 <input 
                   type="number" 
                   step="0.1" 
-                  className="input bg-dark-50" 
+                  className="input bg-dark-700 text-dark-50" 
                   placeholder="--"
                   value={formData.bodyFatMass || ''}
                   readOnly

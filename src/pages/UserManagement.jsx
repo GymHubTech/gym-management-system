@@ -57,17 +57,6 @@ const UserManagement = () => {
       permissions: ['checkin', 'customers_view'],
       lastLogin: '2024-12-08 18:00',
     },
-    {
-      id: 11,
-      name: 'Accountant',
-      email: 'accounts@gym.com',
-      phone: '+1 234 567 0011',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
-      role: 'accountant',
-      status: 'inactive',
-      permissions: ['billing', 'expenses', 'reports'],
-      lastLogin: '2024-12-05 14:00',
-    },
   ];
 
   const roles = [
@@ -216,17 +205,17 @@ const UserManagement = () => {
                 placeholder="Search users..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-dark-50 border border-dark-200 rounded-lg focus:bg-white focus:border-primary-500 outline-none transition-colors"
+                className="w-full pl-10 pr-4 py-2.5 bg-dark-700 border border-dark-600 text-dark-50 placeholder-dark-400 rounded-lg focus:bg-dark-600 focus:border-primary-500 outline-none transition-colors"
               />
             </div>
             <select
               value={filterRole}
               onChange={(e) => setFilterRole(e.target.value)}
-              className="px-4 py-2.5 bg-dark-50 border border-dark-200 rounded-lg focus:border-primary-500 outline-none"
+              className="px-4 py-2.5 bg-dark-700 border border-dark-600 text-dark-50 rounded-lg focus:border-primary-500 outline-none"
             >
-              <option value="all">All Roles</option>
+              <option value="all" className="bg-dark-700 text-dark-50">All Roles</option>
               {roles.map((role) => (
-                <option key={role.value} value={role.value}>
+                <option key={role.value} value={role.value} className="bg-dark-700 text-dark-50">
                   {role.label}
                 </option>
               ))}
@@ -255,12 +244,12 @@ const UserManagement = () => {
             </thead>
             <tbody className="divide-y divide-dark-100">
               {filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-dark-50">
+                <tr key={user.id} className="hover:bg-dark-700">
                   <td className="table-cell">
                     <div className="flex items-center gap-3">
                       <Avatar src={user.avatar} name={user.name} size="md" />
                       <div>
-                        <p className="font-medium text-dark-800">{user.name}</p>
+                        <p className="font-medium text-dark-50">{user.name}</p>
                         <p className="text-xs text-dark-400">{user.email}</p>
                       </div>
                     </div>
@@ -321,7 +310,7 @@ const UserManagement = () => {
                               e.stopPropagation();
                               handleEditUser(user);
                             }}
-                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-dark-600 hover:bg-dark-50"
+                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-dark-200 hover:bg-dark-700"
                           >
                             <Edit className="w-4 h-4" />
                             Edit User
@@ -331,7 +320,7 @@ const UserManagement = () => {
                               e.stopPropagation();
                               setShowActionMenu(null);
                             }}
-                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-dark-600 hover:bg-dark-50"
+                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-dark-200 hover:bg-dark-700"
                           >
                             <Key className="w-4 h-4" />
                             Reset Password
@@ -341,7 +330,7 @@ const UserManagement = () => {
                               e.stopPropagation();
                               setShowActionMenu(null);
                             }}
-                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-dark-600 hover:bg-dark-50"
+                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-dark-200 hover:bg-dark-700"
                           >
                             <Shield className="w-4 h-4" />
                             Permissions
@@ -429,14 +418,14 @@ const UserManagement = () => {
           </div>
           <div>
             <label className="label">Permissions</label>
-            <div className="grid grid-cols-2 gap-2 p-4 bg-dark-50 rounded-lg">
+            <div className="grid grid-cols-2 gap-2 p-4 bg-dark-700 rounded-lg border border-dark-600">
               {permissionsList.map((perm) => (
                 <label
                   key={perm.key}
                   className="flex items-center gap-2 cursor-pointer"
                 >
                   <input type="checkbox" className="w-4 h-4" />
-                  <span className="text-sm text-dark-600">{perm.label}</span>
+                  <span className="text-sm text-dark-200">{perm.label}</span>
                 </label>
               ))}
             </div>
@@ -482,7 +471,7 @@ const UserManagement = () => {
             <div className="flex items-center gap-4 p-4 bg-dark-50 rounded-xl">
               <Avatar src={selectedUser.avatar} name={selectedUser.name} size="xl" />
               <div>
-                <h3 className="font-semibold text-dark-800">{selectedUser.name}</h3>
+                <h3 className="font-semibold text-dark-50">{selectedUser.name}</h3>
                 <p className="text-sm text-dark-500">{selectedUser.email}</p>
                 {getRoleBadge(selectedUser.role)}
               </div>
@@ -541,7 +530,7 @@ const UserManagement = () => {
             </div>
             <div>
               <label className="label">Permissions</label>
-              <div className="grid grid-cols-2 gap-2 p-4 bg-dark-50 rounded-lg">
+              <div className="grid grid-cols-2 gap-2 p-4 bg-dark-700 rounded-lg border border-dark-600">
                 {permissionsList.map((perm) => (
                   <label
                     key={perm.key}
@@ -555,7 +544,7 @@ const UserManagement = () => {
                         selectedUser.permissions?.includes('all')
                       }
                     />
-                    <span className="text-sm text-dark-600">{perm.label}</span>
+                    <span className="text-sm text-dark-200">{perm.label}</span>
                   </label>
                 ))}
               </div>

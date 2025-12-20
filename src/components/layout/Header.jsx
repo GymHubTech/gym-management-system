@@ -30,11 +30,11 @@ const Header = ({ title, subtitle }) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-dark-100">
+    <header className="sticky top-0 z-30 bg-dark-800/80 backdrop-blur-md border-b border-dark-700">
       <div className="flex items-center justify-between px-6 py-4">
         {/* Title */}
         <div>
-          <h1 className="text-2xl font-bold text-dark-800">{title}</h1>
+          <h1 className="text-2xl font-bold text-dark-50">{title}</h1>
           {subtitle && <p className="text-sm text-dark-400 mt-0.5">{subtitle}</p>}
         </div>
 
@@ -48,7 +48,7 @@ const Header = ({ title, subtitle }) => {
               placeholder="Search members, trainers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-64 pl-10 pr-4 py-2.5 bg-dark-50 border border-dark-200 rounded-xl focus:bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all outline-none"
+              className="w-64 pl-10 pr-4 py-2.5 bg-dark-700 border border-dark-600 text-dark-50 placeholder-dark-400 rounded-xl focus:bg-dark-600 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all outline-none"
             />
           </div>
 
@@ -81,7 +81,7 @@ const Header = ({ title, subtitle }) => {
           <div className="relative">
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2.5 text-dark-500 hover:text-dark-700 hover:bg-dark-100 rounded-xl transition-colors"
+              className="relative p-2.5 text-dark-400 hover:text-dark-200 hover:bg-dark-700 rounded-xl transition-colors"
             >
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
@@ -93,9 +93,9 @@ const Header = ({ title, subtitle }) => {
 
             {/* Notifications Dropdown */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-dark-100 overflow-hidden">
-                <div className="px-4 py-3 border-b border-dark-100 flex items-center justify-between">
-                  <h3 className="font-semibold text-dark-800">Notifications</h3>
+              <div className="absolute right-0 mt-2 w-80 bg-dark-800 rounded-xl shadow-lg border border-dark-700 overflow-hidden">
+                <div className="px-4 py-3 border-b border-dark-700 flex items-center justify-between">
+                  <h3 className="font-semibold text-dark-50">Notifications</h3>
                   <span className="text-xs text-primary-500 hover:text-primary-600 cursor-pointer">
                     Mark all read
                   </span>
@@ -104,8 +104,8 @@ const Header = ({ title, subtitle }) => {
                   {mockNotifications.map((notification) => (
                     <div
                       key={notification.id}
-                      className={`px-4 py-3 border-b border-dark-50 hover:bg-dark-50 cursor-pointer ${
-                        !notification.read ? 'bg-primary-50/50' : ''
+                      className={`px-4 py-3 border-b border-dark-700 hover:bg-dark-700 cursor-pointer ${
+                        !notification.read ? 'bg-primary-500/10' : ''
                       }`}
                     >
                       <div className="flex items-start gap-3">
@@ -119,13 +119,13 @@ const Header = ({ title, subtitle }) => {
                           }`}
                         />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-dark-800">
+                          <p className="text-sm font-medium text-dark-50">
                             {notification.title}
                           </p>
-                          <p className="text-xs text-dark-500 mt-0.5 line-clamp-2">
+                          <p className="text-xs text-dark-400 mt-0.5 line-clamp-2">
                             {notification.message}
                           </p>
-                          <p className="text-xs text-dark-400 mt-1">
+                          <p className="text-xs text-dark-500 mt-1">
                             {notification.time}
                           </p>
                         </div>
@@ -133,7 +133,7 @@ const Header = ({ title, subtitle }) => {
                     </div>
                   ))}
                 </div>
-                <div className="px-4 py-3 bg-dark-50 text-center">
+                <div className="px-4 py-3 bg-dark-700 text-center">
                   <button
                     onClick={handleViewAllNotifications}
                     className="text-sm text-primary-500 hover:text-primary-600 cursor-pointer font-medium"
@@ -149,7 +149,7 @@ const Header = ({ title, subtitle }) => {
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-2 p-1.5 pr-3 hover:bg-dark-100 rounded-xl transition-colors"
+              className="flex items-center gap-2 p-1.5 pr-3 hover:bg-dark-700 rounded-xl transition-colors"
             >
               <img
                 src={user.avatar}
@@ -161,22 +161,22 @@ const Header = ({ title, subtitle }) => {
 
             {/* User Dropdown */}
             {showUserMenu && (
-              <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-dark-100 overflow-hidden">
-                <div className="px-4 py-3 border-b border-dark-100">
-                  <p className="font-semibold text-dark-800">{user.name}</p>
+              <div className="absolute right-0 mt-2 w-56 bg-dark-800 rounded-xl shadow-lg border border-dark-700 overflow-hidden">
+                <div className="px-4 py-3 border-b border-dark-700">
+                  <p className="font-semibold text-dark-50">{user.name}</p>
                   <p className="text-xs text-dark-400">{user.email}</p>
                 </div>
                 <div className="py-2">
                   <button
                     onClick={handleMyProfile}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-dark-600 hover:bg-dark-50 transition-colors"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-dark-200 hover:bg-dark-700 transition-colors"
                   >
                     <User className="w-4 h-4" />
                     My Profile
                   </button>
                 </div>
-                <div className="border-t border-dark-100 py-2">
-                  <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-danger-500 hover:bg-danger-50 transition-colors">
+                <div className="border-t border-dark-700 py-2">
+                  <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-danger-500 hover:bg-danger-500/10 transition-colors">
                     <LogOut className="w-4 h-4" />
                     Sign Out
                   </button>

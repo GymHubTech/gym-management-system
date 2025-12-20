@@ -108,7 +108,7 @@ const ProgressTab = ({ member }) => {
             </div>
             <div>
               <p className="text-xs text-dark-500">Weight</p>
-              <p className="text-lg font-bold text-dark-800">{latestLog?.weight || '--'} kg</p>
+              <p className="text-lg font-bold text-dark-50">{latestLog?.weight || '--'} kg</p>
               {renderChangeIndicator(latestLog?.weight, previousLog?.weight, true)}
             </div>
           </div>
@@ -121,7 +121,7 @@ const ProgressTab = ({ member }) => {
             </div>
             <div>
               <p className="text-xs text-dark-500">Body Fat</p>
-              <p className="text-lg font-bold text-dark-800">{latestLog?.bodyFatPercentage || '--'}%</p>
+              <p className="text-lg font-bold text-dark-50">{latestLog?.bodyFatPercentage || '--'}%</p>
               {renderChangeIndicator(latestLog?.bodyFatPercentage, previousLog?.bodyFatPercentage, true)}
             </div>
           </div>
@@ -134,7 +134,7 @@ const ProgressTab = ({ member }) => {
             </div>
             <div>
               <p className="text-xs text-dark-500">Muscle</p>
-              <p className="text-lg font-bold text-dark-800">{latestLog?.skeletalMuscleMass || '--'} kg</p>
+              <p className="text-lg font-bold text-dark-50">{latestLog?.skeletalMuscleMass || '--'} kg</p>
               {renderChangeIndicator(latestLog?.skeletalMuscleMass, previousLog?.skeletalMuscleMass)}
             </div>
           </div>
@@ -147,7 +147,7 @@ const ProgressTab = ({ member }) => {
             </div>
             <div>
               <p className="text-xs text-dark-500">BMI</p>
-              <p className="text-lg font-bold text-dark-800">{latestLog?.bmi || '--'}</p>
+              <p className="text-lg font-bold text-dark-50">{latestLog?.bmi || '--'}</p>
               {renderChangeIndicator(latestLog?.bmi, previousLog?.bmi, true)}
           </div>
         </div>
@@ -160,7 +160,7 @@ const ProgressTab = ({ member }) => {
           </div>
             <div>
               <p className="text-xs text-dark-500">Visceral Fat</p>
-              <p className="text-lg font-bold text-dark-800">{latestLog?.visceralFatLevel || '--'}</p>
+              <p className="text-lg font-bold text-dark-50">{latestLog?.visceralFatLevel || '--'}</p>
               {renderChangeIndicator(latestLog?.visceralFatLevel, previousLog?.visceralFatLevel, true)}
               </div>
           </div>
@@ -173,7 +173,7 @@ const ProgressTab = ({ member }) => {
             </div>
             <div>
               <p className="text-xs text-dark-500">Body Water</p>
-              <p className="text-lg font-bold text-dark-800">{latestLog?.totalBodyWater || '--'} L</p>
+              <p className="text-lg font-bold text-dark-50">{latestLog?.totalBodyWater || '--'} L</p>
               {renderChangeIndicator(latestLog?.totalBodyWater, previousLog?.totalBodyWater)}
           </div>
         </div>
@@ -186,7 +186,7 @@ const ProgressTab = ({ member }) => {
             </div>
             <div>
               <p className="text-xs text-dark-500">BMR</p>
-              <p className="text-lg font-bold text-dark-800">{latestLog?.basalMetabolicRate || '--'}</p>
+              <p className="text-lg font-bold text-dark-50">{latestLog?.basalMetabolicRate || '--'}</p>
               {renderChangeIndicator(latestLog?.basalMetabolicRate, previousLog?.basalMetabolicRate)}
             </div>
           </div>
@@ -199,7 +199,7 @@ const ProgressTab = ({ member }) => {
             </div>
             <div>
               <p className="text-xs text-dark-500">Waist</p>
-              <p className="text-lg font-bold text-dark-800">{latestLog?.waist || '--'} cm</p>
+              <p className="text-lg font-bold text-dark-50">{latestLog?.waist || '--'} cm</p>
               {renderChangeIndicator(latestLog?.waist, previousLog?.waist, true)}
             </div>
           </div>
@@ -210,7 +210,7 @@ const ProgressTab = ({ member }) => {
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-lg font-semibold text-dark-800">Progress Tracking</h3>
+            <h3 className="text-lg font-semibold text-dark-50">Progress Tracking</h3>
             <p className="text-sm text-dark-500">{pagination?.total || 0} records</p>
           </div>
           <button 
@@ -223,7 +223,7 @@ const ProgressTab = ({ member }) => {
         </div>
 
         {/* List Header */}
-        <div className="hidden md:grid grid-cols-12 gap-4 px-4 py-2 bg-dark-50 rounded-lg text-sm font-medium text-dark-600 mb-2">
+        <div className="hidden md:grid grid-cols-12 gap-4 px-4 py-2 bg-dark-800 rounded-lg text-sm font-medium text-dark-300 mb-2">
           <div className="col-span-2">Date</div>
           <div className="col-span-1">Photos</div>
           <div className="col-span-1">Weight</div>
@@ -260,14 +260,14 @@ const ProgressTab = ({ member }) => {
                 return (
                   <div 
                     key={log.id} 
-                    className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 bg-dark-50 rounded-xl hover:bg-dark-100 transition-colors items-center"
+                    className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 bg-dark-700 rounded-xl hover:bg-dark-600 transition-colors items-center"
                   >
                     {/* Date */}
                     <div className="col-span-2">
                       <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-dark-400" />
                         <div>
-                          <p className="font-medium text-dark-800">{formatDate(log.recordedDate) || formatDate(log.date)}</p>
+                          <p className="font-medium text-dark-50">{formatDate(log.recordedDate) || formatDate(log.date)}</p>
                           {log.recordedBy && <p className="text-xs text-dark-500">by {log.recordedBy}</p>}
                         </div>
                       </div>
@@ -322,22 +322,22 @@ const ProgressTab = ({ member }) => {
 
                     {/* Weight */}
                     <div className="col-span-1">
-                      <p className="font-semibold text-dark-800">{log.weight ? `${log.weight} kg` : '-'}</p>
+                      <p className="font-semibold text-dark-50">{log.weight ? `${log.weight} kg` : '-'}</p>
                     </div>
 
                     {/* Body Fat */}
                     <div className="col-span-1">
-                      <p className="font-semibold text-dark-800">{log.bodyFatPercentage ? `${log.bodyFatPercentage}%` : '-'}</p>
+                      <p className="font-semibold text-dark-50">{log.bodyFatPercentage ? `${log.bodyFatPercentage}%` : '-'}</p>
                     </div>
 
                     {/* Muscle */}
                     <div className="col-span-1">
-                      <p className="font-semibold text-dark-800">{log.skeletalMuscleMass ? `${log.skeletalMuscleMass} kg` : '-'}</p>
+                      <p className="font-semibold text-dark-50">{log.skeletalMuscleMass ? `${log.skeletalMuscleMass} kg` : '-'}</p>
                     </div>
 
                     {/* BMI */}
                     <div className="col-span-1">
-                      <p className="font-semibold text-dark-800">{log.bmi || '-'}</p>
+                      <p className="font-semibold text-dark-50">{log.bmi || '-'}</p>
                     </div>
 
                     {/* Source */}
@@ -349,28 +349,28 @@ const ProgressTab = ({ member }) => {
 
                     {/* Notes */}
                     <div className="col-span-2">
-                      <p className="text-sm text-dark-600 truncate">{log.notes || '-'}</p>
+                      <p className="text-sm text-dark-300 truncate">{log.notes || '-'}</p>
                     </div>
 
                     {/* Actions */}
                     <div className="col-span-2 flex items-center justify-end gap-1">
                       <button 
                         onClick={() => setViewLog(log)}
-                        className="p-2 text-dark-400 hover:text-primary-500 hover:bg-primary-50 rounded-lg transition-colors"
+                        className="p-2 text-dark-400 hover:text-primary-400 hover:bg-dark-600 rounded-lg transition-colors"
                         title="View Details"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => handleEdit(log)}
-                        className="p-2 text-dark-400 hover:text-warning-500 hover:bg-warning-50 rounded-lg transition-colors"
+                        className="p-2 text-dark-400 hover:text-warning-400 hover:bg-dark-600 rounded-lg transition-colors"
                         title="Edit"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => handleDelete(log.id)}
-                        className="p-2 text-dark-400 hover:text-danger-500 hover:bg-danger-50 rounded-lg transition-colors"
+                        className="p-2 text-dark-400 hover:text-danger-400 hover:bg-dark-600 rounded-lg transition-colors"
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />

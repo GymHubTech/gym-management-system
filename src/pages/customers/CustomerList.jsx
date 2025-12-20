@@ -184,7 +184,7 @@ const CustomerList = () => {
                 placeholder="Search by name, email, or phone..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-dark-50 border border-dark-200 rounded-lg focus:bg-white focus:border-primary-500 outline-none transition-colors"
+                className="w-full pl-10 pr-4 py-2.5 bg-dark-700 border border-dark-600 text-dark-50 placeholder-dark-400 rounded-lg focus:bg-dark-600 focus:border-primary-500 outline-none transition-colors"
               />
             </div>
           </div>
@@ -226,7 +226,7 @@ const CustomerList = () => {
                   <tr 
                     key={customer.id} 
                     onClick={() => handleViewCustomer(customer.id)}
-                    className="hover:bg-dark-50 cursor-pointer transition-colors"
+                    className="hover:bg-dark-700 cursor-pointer transition-colors"
                   >
                   <td className="table-cell">
                     <div className="flex items-center gap-3">
@@ -236,7 +236,7 @@ const CustomerList = () => {
                         size="md"
                       />
                       <div>
-                          <p className="font-semibold text-dark-800 hover:text-primary-600 transition-colors">{fullName || 'N/A'}</p>
+                          <p className="font-semibold text-dark-50 hover:text-primary-400 transition-colors">{fullName || 'N/A'}</p>
                           {customer.email && (
                             <p className="text-xs text-dark-400">{customer.email}</p>
                           )}
@@ -246,13 +246,13 @@ const CustomerList = () => {
                   <td className="table-cell">
                     <div className="space-y-1">
                         {customer.phoneNumber && (
-                          <div className="flex items-center gap-2 text-sm text-dark-600">
+                          <div className="flex items-center gap-2 text-sm text-dark-300">
                             <Phone className="w-3.5 h-3.5 text-dark-400" />
                             {customer.phoneNumber}
                           </div>
                         )}
                         {customer.email && (
-                      <div className="flex items-center gap-2 text-sm text-dark-600">
+                      <div className="flex items-center gap-2 text-sm text-dark-300">
                         <Mail className="w-3.5 h-3.5 text-dark-400" />
                             {customer.email}
                       </div>
@@ -260,14 +260,14 @@ const CustomerList = () => {
                     </div>
                   </td>
                   <td className="table-cell">
-                      <span className="text-sm text-dark-600">
+                      <span className="text-sm text-dark-300">
                         {customer.address || '-'}
                       </span>
                   </td>
                   <td className="table-cell">
                       {customer.currentMembership?.membershipPlan ? (
                         <div className="space-y-1">
-                          <span className="text-sm font-medium text-dark-800">
+                          <span className="text-sm font-medium text-dark-50">
                             {customer.currentMembership.membershipPlan.planName}
                           </span>
                           <p className="text-xs text-dark-400 flex items-center gap-1">
@@ -286,7 +286,7 @@ const CustomerList = () => {
                   </td>
                   <td className="table-cell">
                       {customer.currentTrainer ? (
-                        <span className="text-sm text-dark-600">
+                        <span className="text-sm text-dark-300">
                           {customer.currentTrainer.name}
                         </span>
                       ) : (
@@ -294,7 +294,7 @@ const CustomerList = () => {
                       )}
                   </td>
                   <td className="table-cell">
-                      <span className="text-sm text-dark-600">
+                      <span className="text-sm text-dark-300">
                         {formatCurrency(customer.balance)}
                       </span>
                   </td>
@@ -302,21 +302,21 @@ const CustomerList = () => {
                       <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => handleViewCustomer(customer.id)}
-                          className="p-2 text-dark-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                          className="p-2 text-dark-400 hover:text-primary-400 hover:bg-dark-700 rounded-lg transition-colors"
                           title="View customer"
                         >
                           <ChevronRight className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleOpenModal(customer)}
-                          className="p-2 text-dark-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                          className="p-2 text-dark-400 hover:text-primary-400 hover:bg-dark-700 rounded-lg transition-colors"
                           title="Edit customer"
                         >
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteCustomer(customer.id)}
-                          className="p-2 text-dark-400 hover:text-danger-600 hover:bg-danger-50 rounded-lg transition-colors"
+                          className="p-2 text-dark-400 hover:text-danger-400 hover:bg-dark-700 rounded-lg transition-colors"
                           title="Delete customer"
                         >
                           <Trash className="w-4 h-4" />
@@ -339,24 +339,24 @@ const CustomerList = () => {
         {/* Pagination */}
         {pagination && pagination.lastPage > 1 && (
           <div className="flex items-center justify-between mt-6 pt-6 border-t border-dark-200">
-            <div className="text-sm text-dark-600">
+            <div className="text-sm text-dark-300">
               Showing {pagination.from} to {pagination.to} of {pagination.total} customers
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="p-2 rounded-lg border border-dark-200 hover:bg-dark-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-lg border border-dark-600 hover:bg-dark-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-dark-300"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <span className="px-4 py-2 text-sm text-dark-600">
+              <span className="px-4 py-2 text-sm text-dark-300">
                 Page {pagination.currentPage} of {pagination.lastPage}
               </span>
               <button
                 onClick={() => setCurrentPage(prev => Math.min(pagination.lastPage, prev + 1))}
                 disabled={currentPage === pagination.lastPage}
-                className="p-2 rounded-lg border border-dark-200 hover:bg-dark-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-lg border border-dark-600 hover:bg-dark-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-dark-300"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>

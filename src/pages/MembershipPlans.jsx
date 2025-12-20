@@ -274,7 +274,7 @@ const MembershipPlans = () => {
             )}
 
             <div className="mb-6">
-              <h3 className="text-xl font-bold text-dark-800">{plan.name}</h3>
+              <h3 className="text-xl font-bold text-dark-50">{plan.name}</h3>
               <div className="flex items-baseline gap-1 mt-2">
                 <span className="text-4xl font-bold text-primary-600">
                   {formatCurrency(plan.price)}
@@ -288,10 +288,10 @@ const MembershipPlans = () => {
             <div className="space-y-3 mb-6 flex-1">
               {(plan.features.length >= 5 ? plan.features.slice(0, 4) : plan.features).map((feature, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <div className="w-5 h-5 bg-success-100 rounded-full flex items-center justify-center">
-                    <Check className="w-3 h-3 text-success-600" />
+                  <div className="w-5 h-5 bg-success-500 rounded-full flex items-center justify-center">
+                    <Check className="w-3 h-3 text-white" />
                   </div>
-                  <span className="text-sm text-dark-600">{feature}</span>
+                  <span className="text-sm text-dark-200">{feature}</span>
                 </div>
               ))}
               {plan.features.length >= 5 && (
@@ -461,14 +461,14 @@ const MembershipPlans = () => {
                   <Users className="w-4 h-4" />
                   <span className="text-sm font-medium">Active Members</span>
                 </div>
-                <p className="text-2xl font-bold text-dark-800">{detailsPlan.activeMembers}</p>
+                <p className="text-2xl font-bold text-dark-50">{detailsPlan.activeMembers}</p>
               </div>
               <div className="bg-dark-50 rounded-lg p-4">
                 <div className="flex items-center gap-2 text-dark-500 mb-1">
                   <PhilippinePeso className="w-4 h-4" />
                   <span className="text-sm font-medium">Est. Revenue</span>
                 </div>
-                <p className="text-2xl font-bold text-dark-800">
+                <p className="text-2xl font-bold text-dark-50">
                   {formatCurrency(detailsPlan.price * detailsPlan.activeMembers)}
                 </p>
               </div>
@@ -476,14 +476,14 @@ const MembershipPlans = () => {
 
             {/* All Features */}
             <div>
-              <h3 className="text-lg font-semibold text-dark-800 mb-4">All Features</h3>
+              <h3 className="text-lg font-semibold text-dark-50 mb-4">All Features</h3>
               <div className="space-y-3">
                 {detailsPlan.features.map((feature, index) => (
                   <div key={index} className="flex items-center gap-3">
-                    <div className="w-6 h-6 bg-success-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Check className="w-4 h-4 text-success-600" />
+                    <div className="w-6 h-6 bg-success-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Check className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-dark-700">{feature}</span>
+                    <span className="text-dark-200">{feature}</span>
                   </div>
                 ))}
                 {detailsPlan.features.length === 0 && (

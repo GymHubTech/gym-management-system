@@ -1,11 +1,11 @@
 const Badge = ({ children, variant = 'default', size = 'md' }) => {
   const variantClasses = {
-    default: 'bg-dark-100 text-dark-600',
-    primary: 'bg-primary-100 text-primary-600',
-    success: 'bg-success-100 text-success-600',
-    warning: 'bg-warning-100 text-warning-600',
-    danger: 'bg-danger-100 text-danger-600',
-    accent: 'bg-accent-100 text-accent-600',
+    default: 'bg-dark-700 text-dark-200',
+    primary: 'bg-primary-500 text-white',
+    success: 'bg-success-500 text-white',
+    warning: 'bg-warning-500 text-white',
+    danger: 'bg-danger-500 text-white',
+    accent: 'bg-accent-500 text-white',
   };
 
   const sizeClasses = {

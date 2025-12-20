@@ -99,7 +99,7 @@ const CustomerProfile = () => {
       <Layout title="Customer Not Found">
         <div className="card text-center py-12">
           <User className="w-16 h-16 text-dark-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-dark-600">Customer not found</h3>
+          <h3 className="text-lg font-semibold text-dark-300">Customer not found</h3>
           <button onClick={() => navigate('/customers')} className="btn-primary mt-4">
             Back to Customers
           </button>
@@ -117,8 +117,8 @@ const CustomerProfile = () => {
     { key: 'progress', label: 'Progress Tracking', icon: Activity },
     { key: 'scans', label: 'Scans', icon: FileText },
     { key: 'bills', label: 'Membership Plan & Payments', icon: CreditCard },
-    { key: 'appointments', label: 'Appointments', icon: CalendarDays },
-    { key: 'files', label: 'Files', icon: FolderOpen },
+    // { key: 'appointments', label: 'Appointments', icon: CalendarDays },
+    // { key: 'files', label: 'Files', icon: FolderOpen },
   ];
 
   return (
@@ -143,7 +143,7 @@ const CustomerProfile = () => {
             <Avatar src={member.avatar} name={member.name} size="lg" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-xl font-bold text-dark-800">{member.name}</h2>
+                <h2 className="text-xl font-bold text-dark-50">{member.name}</h2>
                 <Badge
                   variant={
                     member.membershipStatus === CUSTOMER_MEMBERSHIP_STATUS.ACTIVE
@@ -204,7 +204,7 @@ const CustomerProfile = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <div>
               <p className="text-xs text-dark-400 mb-0.5">Email</p>
-              <p className="text-sm text-dark-700">{member.email}</p>
+              <p className="text-sm text-dark-200">{member.email}</p>
             </div>
             <div>
               <p className="text-xs text-dark-400 mb-0.5">Phone</p>
@@ -275,7 +275,7 @@ const CustomerProfile = () => {
         />
       )}
 
-      {activeTab === 'appointments' && (
+      {/* {activeTab === 'appointments' && (
         <AppointmentsTab
           member={member}
           appointments={memberAppointments}
@@ -286,7 +286,7 @@ const CustomerProfile = () => {
         <FilesTab
           member={member}
         />
-      )}
+      )} */}
 
       {/* Edit Profile Modal */}
       <CustomerForm

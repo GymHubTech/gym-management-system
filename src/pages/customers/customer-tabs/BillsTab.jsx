@@ -150,7 +150,7 @@ const BillsTab = ({ member, onCustomerUpdate }) => {
       {/* Membership Plan Card */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-dark-800">Membership Plan</h3>
+          <h3 className="text-lg font-semibold text-dark-50">Membership Plan</h3>
           <button 
             onClick={() => setShowMembershipModal(true)} 
             className={`flex items-center gap-2 ${hasActiveMembership ? 'btn-primary' : 'btn-success'}`}
@@ -161,22 +161,22 @@ const BillsTab = ({ member, onCustomerUpdate }) => {
         </div>
         
         {hasActiveMembership ? (
-          <div className="p-4 bg-primary-50 border border-primary-200 rounded-lg">
+          <div className="p-4 bg-dark-700 border border-dark-600 rounded-lg">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <h4 className="text-lg font-semibold text-dark-800">
+                  <h4 className="text-lg font-semibold text-dark-50">
                     {currentMembership.membershipPlan?.planName || 'N/A'}
                   </h4>
                   <Badge variant="success">Active</Badge>
                 </div>
                 {currentMembership.membershipPlan && (
-                  <p className="text-sm text-dark-600 mb-2">
+                  <p className="text-sm text-dark-300 mb-2">
                     Price: {formatCurrency(currentMembership.membershipPlan.price)} | 
                     Duration: {currentMembership.membershipPlan.planPeriod} {currentMembership.membershipPlan.planInterval}
                   </p>
                 )}
-                <div className="flex items-center gap-4 text-sm text-dark-500">
+                <div className="flex items-center gap-4 text-sm text-dark-400">
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
                     <span>
@@ -194,8 +194,8 @@ const BillsTab = ({ member, onCustomerUpdate }) => {
             </div>
           </div>
         ) : (
-          <div className="p-4 bg-dark-50 border border-dark-200 rounded-lg text-center">
-            <p className="text-dark-500">No active membership plan</p>
+          <div className="p-4 bg-dark-700 border border-dark-600 rounded-lg text-center">
+            <p className="text-dark-300">No active membership plan</p>
             <p className="text-sm text-dark-400 mt-1">Click "Add Membership Plan" to assign a membership to this customer</p>
           </div>
         )}
@@ -249,7 +249,7 @@ const BillsTab = ({ member, onCustomerUpdate }) => {
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-lg font-semibold text-dark-800">Bills and Payments</h3>
+            <h3 className="text-lg font-semibold text-dark-50">Bills and Payments</h3>
             <p className="text-sm text-dark-500">{pagination?.total || bills.length} {pagination?.total === 1 ? 'record' : 'records'}</p>
           </div>
         </div>
@@ -273,7 +273,7 @@ const BillsTab = ({ member, onCustomerUpdate }) => {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-dark-50">
+                <tr className="bg-dark-800">
                   <th className="table-header">Bill Date</th>
                   <th className="table-header">Bill Type</th>
                   <th className="table-header">Created By</th>
@@ -291,14 +291,14 @@ const BillsTab = ({ member, onCustomerUpdate }) => {
                     : bill.billType;
 
                   return (
-                    <tr key={bill.id} className="hover:bg-dark-50">
+                    <tr key={bill.id} className="hover:bg-dark-700">
                       <td className="table-cell">{formatDate(bill.billDate)}</td>
                       <td className="table-cell">{billTypeDisplay}</td>
-                      <td className="table-cell text-dark-600">Jomilen Dela Torre</td>
-                      <td className="table-cell font-semibold text-dark-800">
+                      <td className="table-cell text-dark-300">Jomilen Dela Torre</td>
+                      <td className="table-cell font-semibold text-dark-50">
                         {formatCurrency(bill.netAmount)}
                       </td>
-                      <td className="table-cell font-semibold text-dark-800">
+                      <td className="table-cell font-semibold text-dark-50">
                         {formatCurrency(bill.paidAmount)}
                       </td>
                       <td className="table-cell">
@@ -317,7 +317,7 @@ const BillsTab = ({ member, onCustomerUpdate }) => {
                           </button>
                           <button
                             onClick={() => handleEdit(bill)}
-                            className="p-2 text-dark-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                            className="p-2 text-dark-400 hover:text-primary-400 hover:bg-dark-700 rounded-lg transition-colors"
                             title="Edit Bill"
                           >
                             <Edit className="w-4 h-4" />

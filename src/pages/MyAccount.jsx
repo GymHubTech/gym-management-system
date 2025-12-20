@@ -137,7 +137,7 @@ const MyAccount = () => {
           {/* Account Owner Info */}
           <div className="card">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-dark-800">My Profile</h3>
+              <h3 className="text-lg font-semibold text-dark-50">My Profile</h3>
               <button
                 onClick={() => setShowEditModal(true)}
                 className="btn-secondary flex items-center gap-2"
@@ -149,7 +149,7 @@ const MyAccount = () => {
             <div className="flex items-center gap-6">
               <Avatar src={user.avatar} name={user.name} size="xl" />
               <div className="flex-1">
-                <h4 className="text-xl font-bold text-dark-800">{user.name}</h4>
+                <h4 className="text-xl font-bold text-dark-50">{user.name}</h4>
                 <p className="text-dark-500">{user.email}</p>
                 <Badge variant="primary" size="lg">
                   {user.role}
@@ -165,7 +165,7 @@ const MyAccount = () => {
                 </div>
                 <div>
                   <p className="text-sm text-dark-400">Email</p>
-                  <p className="font-semibold text-dark-800">{user.email}</p>
+                  <p className="font-semibold text-dark-50">{user.email}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -174,7 +174,7 @@ const MyAccount = () => {
                 </div>
                 <div>
                   <p className="text-sm text-dark-400">Phone</p>
-                  <p className="font-semibold text-dark-800">+1 234 567 8900</p>
+                  <p className="font-semibold text-dark-50">+1 234 567 8900</p>
                 </div>
               </div>
             </div>
@@ -184,7 +184,7 @@ const MyAccount = () => {
           {isAdmin && (
             <div className="card">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-dark-800">Business Information</h3>
+                <h3 className="text-lg font-semibold text-dark-50">Business Information</h3>
                 <button className="btn-secondary flex items-center gap-2">
                   <Edit className="w-4 h-4" />
                   Edit
@@ -197,7 +197,7 @@ const MyAccount = () => {
                   </div>
                   <div>
                     <p className="text-sm text-dark-400">Business Name</p>
-                    <p className="font-semibold text-dark-800">{accountData.gym.name}</p>
+                    <p className="font-semibold text-dark-50">{accountData.gym.name}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -206,7 +206,7 @@ const MyAccount = () => {
                   </div>
                   <div>
                     <p className="text-sm text-dark-400">Business Email</p>
-                    <p className="font-semibold text-dark-800">{accountData.gym.email}</p>
+                    <p className="font-semibold text-dark-50">{accountData.gym.email}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -215,7 +215,7 @@ const MyAccount = () => {
                   </div>
                   <div>
                     <p className="text-sm text-dark-400">Business Phone</p>
-                    <p className="font-semibold text-dark-800">{accountData.gym.phone}</p>
+                    <p className="font-semibold text-dark-50">{accountData.gym.phone}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -224,7 +224,7 @@ const MyAccount = () => {
                   </div>
                   <div>
                     <p className="text-sm text-dark-400">Address</p>
-                    <p className="font-semibold text-dark-800">{accountData.gym.address}</p>
+                    <p className="font-semibold text-dark-50">{accountData.gym.address}</p>
                   </div>
                 </div>
               </div>
@@ -233,7 +233,7 @@ const MyAccount = () => {
 
           {/* Security Section */}
           <div className="card">
-            <h3 className="text-lg font-semibold text-dark-800 mb-6">Security</h3>
+            <h3 className="text-lg font-semibold text-dark-50 mb-6">Security</h3>
             
             <div className="space-y-4">
               {/* Password */}
@@ -243,7 +243,7 @@ const MyAccount = () => {
                     <Key className="w-6 h-6 text-primary-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-dark-800">Password</h4>
+                    <h4 className="font-semibold text-dark-50">Password</h4>
                     <p className="text-sm text-dark-500">Last changed 30 days ago</p>
                   </div>
                 </div>
@@ -262,7 +262,7 @@ const MyAccount = () => {
                     <Shield className="w-6 h-6 text-success-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-dark-800">Two-Factor Authentication</h4>
+                    <h4 className="font-semibold text-dark-50">Two-Factor Authentication</h4>
                     <p className="text-sm text-dark-500">Add an extra layer of security</p>
                   </div>
                 </div>
@@ -312,7 +312,7 @@ const MyAccount = () => {
           {/* Current Plan */}
           <div className="card">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-dark-800">Current Plan</h3>
+              <h3 className="text-lg font-semibold text-dark-50">Current Plan</h3>
               <Badge variant="success" size="lg">
                 {accountData.subscription.status}
               </Badge>
@@ -334,12 +334,12 @@ const MyAccount = () => {
             </div>
 
             <div className="mt-6">
-              <h4 className="font-semibold text-dark-800 mb-4">Plan Features</h4>
+              <h4 className="font-semibold text-dark-50 mb-4">Plan Features</h4>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {accountData.subscription.features.map((feature, index) => (
                   <div key={index} className="flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-success-500" />
-                    <span className="text-dark-600">{feature}</span>
+                    <span className="text-dark-300">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -360,7 +360,7 @@ const MyAccount = () => {
           {/* Payment Method */}
           <div className="card">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-dark-800">Payment Method</h3>
+              <h3 className="text-lg font-semibold text-dark-50">Payment Method</h3>
               <button
                 onClick={() => setShowPaymentMethodModal(true)}
                 className="btn-secondary flex items-center gap-2"
@@ -374,7 +374,7 @@ const MyAccount = () => {
                 <CreditCard className="w-8 h-8 text-primary-600" />
               </div>
               <div>
-                <p className="font-semibold text-dark-800">
+                <p className="font-semibold text-dark-50">
                   {accountData.paymentMethod.brand} •••• {accountData.paymentMethod.last4}
                 </p>
                 <p className="text-sm text-dark-500">
@@ -386,7 +386,7 @@ const MyAccount = () => {
 
           {/* Available Plans */}
           <div className="card">
-            <h3 className="text-lg font-semibold text-dark-800 mb-6">Available Plans</h3>
+            <h3 className="text-lg font-semibold text-dark-50 mb-6">Available Plans</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {plans.map((plan) => (
                 <div
@@ -407,7 +407,7 @@ const MyAccount = () => {
                       <Badge variant="success">Current</Badge>
                     </div>
                   )}
-                  <h4 className="text-xl font-bold text-dark-800">{plan.name}</h4>
+                  <h4 className="text-xl font-bold text-dark-50">{plan.name}</h4>
                   <div className="flex items-baseline gap-1 mt-2 mb-4">
                     <span className="text-3xl font-bold text-primary-600">${plan.price}</span>
                     <span className="text-dark-500">/month</span>
@@ -440,7 +440,7 @@ const MyAccount = () => {
       {activeTab === 'billing' && isAdmin && (
         <div className="card">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-dark-800">Payment History</h3>
+            <h3 className="text-lg font-semibold text-dark-50">Payment History</h3>
             <button className="btn-secondary flex items-center gap-2">
               <Download className="w-4 h-4" />
               Export All
@@ -459,8 +459,8 @@ const MyAccount = () => {
               </thead>
               <tbody className="divide-y divide-dark-100">
                 {accountData.invoices.map((invoice) => (
-                  <tr key={invoice.id} className="hover:bg-dark-50">
-                    <td className="table-cell font-medium text-dark-800">
+                  <tr key={invoice.id} className="hover:bg-dark-700">
+                    <td className="table-cell font-medium text-dark-50">
                       {invoice.invoice}
                     </td>
                     <td className="table-cell">{invoice.date}</td>

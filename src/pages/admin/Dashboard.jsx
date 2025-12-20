@@ -44,7 +44,7 @@ const AdminDashboard = () => {
 
   return (
     <Layout title="Dashboard" subtitle="Welcome back! Here's what's happening today.">
-      {/* Stats Grid */}
+      {/* Stats Grid - First Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           title="Total Members"
@@ -65,11 +65,10 @@ const AdminDashboard = () => {
           subtitle="This month"
         />
         <StatCard
-          title="Today's Check-ins"
-          value={stats.todayCheckIns}
-          icon={Clock}
-          color="accent"
-          subtitle="47 members checked in"
+          title="Today's Revenue"
+          value={formatCurrency(stats.todayRevenue)}
+          icon={DollarSign}
+          color="success"
         />
         <StatCard
           title="Expiring Soon"
@@ -78,10 +77,18 @@ const AdminDashboard = () => {
           color="warning"
           subtitle="Next 30 days"
         />
+        {/* Today's Check-ins - Commented out for future use */}
+        {/* <StatCard
+          title="Today's Check-ins"
+          value={stats.todayCheckIns}
+          icon={Clock}
+          color="accent"
+          subtitle="47 members checked in"
+        /> */}
       </div>
 
-      {/* Revenue Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      {/* Revenue Stats - Commented out for future use */}
+      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <StatCard
           title="Today's Revenue"
           value={formatCurrency(stats.todayRevenue)}
@@ -102,18 +109,18 @@ const AdminDashboard = () => {
           icon={CreditCard}
           color="danger"
         />
-      </div>
+      </div> */}
 
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Revenue Chart */}
-        <div className="lg:col-span-2 card">
+      {/* Charts Row - Second Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Revenue Overview - Commented out for future use */}
+        {/* <div className="lg:col-span-2 card">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-lg font-semibold text-dark-800">Revenue Overview</h3>
+              <h3 className="text-lg font-semibold text-dark-50">Revenue Overview</h3>
               <p className="text-sm text-dark-400">Monthly revenue vs expenses</p>
             </div>
-            <select className="px-3 py-2 text-sm bg-dark-50 border border-dark-200 rounded-lg focus:border-primary-500 outline-none">
+            <select className="px-3 py-2 text-sm bg-dark-700 border border-dark-600 text-dark-50 rounded-lg focus:border-primary-500 outline-none">
               <option>This Year</option>
               <option>Last Year</option>
             </select>
@@ -138,11 +145,69 @@ const AdminDashboard = () => {
               </BarChart>
             </ResponsiveContainer>
           </div>
+        </div> */}
+
+        {/* Memberships Expiring Soon */}
+        <div className="card">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-dark-50">Memberships Expiring Soon</h3>
+            <a href="/customers" className="text-sm text-primary-500 hover:text-primary-600 font-medium">
+              View All Members →
+            </a>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-dark-800">
+                  <th className="table-header">Member</th>
+                  <th className="table-header">Membership</th>
+                  <th className="table-header">Expiry Date</th>
+                  <th className="table-header">Status</th>
+                  <th className="table-header">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-dark-100">
+                {mockMembers
+                  .filter(
+                    (m) => m.membershipStatus === 'expiring' || m.membershipStatus === 'expired'
+                  )
+                  .map((member) => (
+                    <tr key={member.id} className="hover:bg-dark-700">
+                      <td className="table-cell">
+                        <div className="flex items-center gap-3">
+                          <Avatar src={member.avatar} name={member.name} size="sm" />
+                          <div>
+                            <p className="font-medium text-dark-50">{member.name}</p>
+                            <p className="text-xs text-dark-400">{member.email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="table-cell">{member.membership}</td>
+                      <td className="table-cell">{member.membershipExpiry}</td>
+                      <td className="table-cell">
+                        <Badge
+                          variant={
+                            member.membershipStatus === 'expiring' ? 'warning' : 'danger'
+                          }
+                        >
+                          {member.membershipStatus}
+                        </Badge>
+                      </td>
+                      <td className="table-cell">
+                        <button className="btn-primary text-sm py-1.5 px-3">
+                          Send Reminder
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Membership Distribution */}
         <div className="card">
-          <h3 className="text-lg font-semibold text-dark-800 mb-6">Membership Distribution</h3>
+          <h3 className="text-lg font-semibold text-dark-50 mb-6">Membership Distribution</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -171,21 +236,21 @@ const AdminDashboard = () => {
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: item.color }}
                   />
-                  <span className="text-dark-600">{item.name}</span>
+                  <span className="text-dark-300">{item.name}</span>
                 </div>
-                <span className="font-medium text-dark-800">{item.value}</span>
+                <span className="font-medium text-dark-50">{item.value}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Bottom Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Bottom Section - Commented out for future use */}
+      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Today's Check-ins */}
-        <div className="card">
+        {/* <div className="card">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-dark-800">Today's Check-ins</h3>
+            <h3 className="text-lg font-semibold text-dark-50">Today's Check-ins</h3>
             <a href="/check-in" className="text-sm text-primary-500 hover:text-primary-600 font-medium">
               View All →
             </a>
@@ -196,7 +261,7 @@ const AdminDashboard = () => {
               return (
                 <div
                   key={checkIn.id}
-                  className="flex items-center justify-between p-3 bg-dark-50 rounded-xl"
+                  className="flex items-center justify-between p-3 bg-dark-700 rounded-xl"
                 >
                   <div className="flex items-center gap-3">
                     <Avatar
@@ -206,7 +271,7 @@ const AdminDashboard = () => {
                       status={checkIn.status === 'checked-in' ? 'online' : 'offline'}
                     />
                     <div>
-                      <p className="font-medium text-dark-800">{checkIn.member}</p>
+                      <p className="font-medium text-dark-50">{checkIn.member}</p>
                       <p className="text-xs text-dark-400">{checkIn.time}</p>
                     </div>
                   </div>
@@ -230,12 +295,12 @@ const AdminDashboard = () => {
               );
             })}
           </div>
-        </div>
+        </div> */}
 
         {/* Today's Appointments */}
-        <div className="card">
+        {/* <div className="card">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-dark-800">Today's Appointments</h3>
+            <h3 className="text-lg font-semibold text-dark-50">Today's Appointments</h3>
             <a href="/calendar" className="text-sm text-primary-500 hover:text-primary-600 font-medium">
               View Calendar →
             </a>
@@ -247,16 +312,16 @@ const AdminDashboard = () => {
               .map((appointment) => (
                 <div
                   key={appointment.id}
-                  className="flex items-center justify-between p-3 bg-dark-50 rounded-xl"
+                  className="flex items-center justify-between p-3 bg-dark-700 rounded-xl"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-primary-100 rounded-xl flex flex-col items-center justify-center">
-                      <span className="text-xs text-primary-600 font-medium">
+                    <div className="w-12 h-12 bg-primary-500 rounded-xl flex flex-col items-center justify-center">
+                      <span className="text-xs text-white font-medium">
                         {appointment.time}
                       </span>
                     </div>
                     <div>
-                      <p className="font-medium text-dark-800">{appointment.member}</p>
+                      <p className="font-medium text-dark-50">{appointment.member}</p>
                       <p className="text-xs text-dark-400">
                         {appointment.type} with {appointment.trainer}
                       </p>
@@ -276,66 +341,8 @@ const AdminDashboard = () => {
                 </div>
               ))}
           </div>
-        </div>
-      </div>
-
-      {/* Members Expiring Soon */}
-      <div className="card mt-6">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-dark-800">Memberships Expiring Soon</h3>
-          <a href="/customers" className="text-sm text-primary-500 hover:text-primary-600 font-medium">
-            View All Members →
-          </a>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-dark-50">
-                <th className="table-header">Member</th>
-                <th className="table-header">Membership</th>
-                <th className="table-header">Expiry Date</th>
-                <th className="table-header">Status</th>
-                <th className="table-header">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-dark-100">
-              {mockMembers
-                .filter(
-                  (m) => m.membershipStatus === 'expiring' || m.membershipStatus === 'expired'
-                )
-                .map((member) => (
-                  <tr key={member.id} className="hover:bg-dark-50">
-                    <td className="table-cell">
-                      <div className="flex items-center gap-3">
-                        <Avatar src={member.avatar} name={member.name} size="sm" />
-                        <div>
-                          <p className="font-medium text-dark-800">{member.name}</p>
-                          <p className="text-xs text-dark-400">{member.email}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="table-cell">{member.membership}</td>
-                    <td className="table-cell">{member.membershipExpiry}</td>
-                    <td className="table-cell">
-                      <Badge
-                        variant={
-                          member.membershipStatus === 'expiring' ? 'warning' : 'danger'
-                        }
-                      >
-                        {member.membershipStatus}
-                      </Badge>
-                    </td>
-                    <td className="table-cell">
-                      <button className="btn-primary text-sm py-1.5 px-3">
-                        Send Reminder
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
     </Layout>
   );
 };

@@ -60,8 +60,8 @@ const ScansTab = ({ member }) => {
 
   const getScanTypeBadge = (type) => {
     return type === 'inbody'
-      ? 'bg-primary-100 text-primary-700'
-      : 'bg-accent-100 text-accent-700';
+      ? 'bg-primary-500 text-white'
+      : 'bg-accent-500 text-white';
   };
 
   return (
@@ -109,7 +109,7 @@ const ScansTab = ({ member }) => {
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-lg font-semibold text-dark-800">Body Composition Scans</h3>
+            <h3 className="text-lg font-semibold text-dark-50">Body Composition Scans</h3>
             <p className="text-sm text-dark-500">{pagination?.total || 0} records</p>
           </div>
           <button 
@@ -140,7 +140,7 @@ const ScansTab = ({ member }) => {
 
         {/* Table Header */}
         {!isLoading && !isError && (
-          <div className="hidden md:grid grid-cols-12 gap-4 px-4 py-2 bg-dark-50 rounded-lg text-sm font-medium text-dark-600 mb-2">
+          <div className="hidden md:grid grid-cols-12 gap-4 px-4 py-2 bg-dark-800 rounded-lg text-sm font-medium text-dark-300 mb-2">
             <div className="col-span-2">Date</div>
             <div className="col-span-2">Scan Type</div>
             <div className="col-span-2">Notes</div>
@@ -156,13 +156,13 @@ const ScansTab = ({ member }) => {
             {paginatedScans.map((scan) => (
               <div 
                 key={scan.id} 
-                className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 bg-dark-50 rounded-xl hover:bg-dark-100 transition-colors items-center"
+                className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 bg-dark-700 rounded-xl hover:bg-dark-600 transition-colors items-center"
               >
                 {/* Date */}
                 <div className="col-span-2">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-dark-400" />
-                    <p className="font-medium text-dark-800">{formatDate(scan.scanDate)}</p>
+                    <p className="font-medium text-dark-50">{formatDate(scan.scanDate)}</p>
                   </div>
                 </div>
 
@@ -182,12 +182,12 @@ const ScansTab = ({ member }) => {
 
                 {/* Notes */}
                 <div className="col-span-2">
-                  <p className="text-sm text-dark-600 truncate">{scan.notes || '-'}</p>
+                  <p className="text-sm text-dark-300 truncate">{scan.notes || '-'}</p>
                 </div>
 
                 {/* Uploaded By */}
                 <div className="col-span-2">
-                  <p className="text-sm text-dark-600">{scan.uploadedBy || '-'}</p>
+                  <p className="text-sm text-dark-300">{scan.uploadedBy || '-'}</p>
                 </div>
                 {/* Photos */}
                 <div className="col-span-2">
@@ -240,14 +240,14 @@ const ScansTab = ({ member }) => {
                 <div className="col-span-2 flex items-center justify-end gap-2">
                   <button 
                     onClick={() => handleEdit(scan)}
-                    className="p-2 text-dark-400 hover:text-warning-500 hover:bg-warning-50 rounded-lg transition-colors"
+                    className="p-2 text-dark-400 hover:text-warning-400 hover:bg-dark-600 rounded-lg transition-colors"
                     title="Edit"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
                   <button 
                     onClick={() => handleDelete(scan.id)}
-                    className="p-2 text-dark-400 hover:text-danger-500 hover:bg-danger-50 rounded-lg transition-colors"
+                    className="p-2 text-dark-400 hover:text-danger-400 hover:bg-dark-600 rounded-lg transition-colors"
                     title="Delete"
                   >
                     <Trash2 className="w-4 h-4" />

@@ -145,7 +145,7 @@ const CustomerForm = ({
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Personal Information */}
         <div className="border-b border-dark-200 pb-6">
-          <h3 className="text-lg font-semibold text-dark-800 mb-4">Personal Information</h3>
+          <h3 className="text-lg font-semibold text-dark-50 mb-4">Personal Information</h3>
           <div className="grid grid-cols-6 gap-6">
             {/* Photo Area */}
             {/* <div className="col-span-1">
@@ -166,7 +166,7 @@ const CustomerForm = ({
                       }}
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-dark-100 bg-opacity-75 opacity-0 hover:opacity-100 transition-opacity">
-                      <span className="text-xs text-dark-600">Change</span>
+                      <span className="text-xs text-dark-300">Change</span>
                     </div>
                   </>
                 ) : (
@@ -310,7 +310,7 @@ const CustomerForm = ({
 
         {/* Contact Information */}
         <div className="border-b border-dark-200 pb-6">
-          <h3 className="text-lg font-semibold text-dark-800 mb-4">Contact Information</h3>
+          <h3 className="text-lg font-semibold text-dark-50 mb-4">Contact Information</h3>
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="label">
@@ -378,7 +378,7 @@ const CustomerForm = ({
         {/* Membership - Only show when creating new customer */}
         {!selectedCustomer && (
           <div className="border-b border-dark-200 pb-6">
-            <h3 className="text-lg font-semibold text-dark-800 mb-4">Membership & Trainer</h3>
+            <h3 className="text-lg font-semibold text-dark-50 mb-4">Membership & Trainer</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="label">Membership Plan</label>
@@ -426,7 +426,7 @@ const CustomerForm = ({
         )}
         {/* Health & Emergency */}
         <div>
-          <h3 className="text-lg font-semibold text-dark-800 mb-4">Health & Emergency</h3>
+          <h3 className="text-lg font-semibold text-dark-50 mb-4">Health & Emergency</h3>
           
           {/* Medical Information */}
           <div className="space-y-4">
@@ -542,7 +542,7 @@ const CustomerForm = ({
           
           {/* Emergency Contact */}
           <div className="border-t border-dark-200 pt-4 mt-4">
-            <h4 className="text-md font-semibold text-dark-700 mb-3">Emergency Contact</h4>
+            <h4 className="text-md font-semibold text-dark-50 mb-3">Emergency Contact</h4>
             <div className="grid grid-cols-4 gap-4">
               <div>
                 <label className="label">Emergency Contact Name</label>

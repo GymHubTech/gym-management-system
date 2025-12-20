@@ -9,9 +9,9 @@
  */
 export const getDataSourceBadge = (source) => {
   const styles = {
-    manual: 'bg-dark-100 text-dark-700',
-    inbody: 'bg-primary-100 text-primary-700',
-    styku: 'bg-accent-100 text-accent-700',
+    manual: 'bg-dark-700 text-dark-200',
+    inbody: 'bg-primary-500 text-white',
+    styku: 'bg-accent-500 text-white',
   };
   return styles[source] || styles.manual;
 };
