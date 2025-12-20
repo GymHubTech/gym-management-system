@@ -126,7 +126,7 @@ const CustomerList = () => {
 
     try {
       await deleteCustomerMutation.mutateAsync(customerId);
-      Alert.success('Deleted!', 'Customer has been deleted.', {
+      Alert.success('Deleted!', 'Member has been deleted.', {
         timer: 2000,
         showConfirmButton: false
       });
@@ -143,7 +143,7 @@ const CustomerList = () => {
 
   if (loading && customers.length === 0) {
     return (
-      <Layout title="Customer Management" subtitle="Manage all gym members and their information">
+      <Layout title="Member Management" subtitle="Manage all gym members and their information">
         <div className="flex items-center justify-center h-64">
           <p className="text-dark-500">Loading customers...</p>
         </div>
@@ -152,7 +152,7 @@ const CustomerList = () => {
   }
 
   return (
-    <Layout title="Customer Management" subtitle="Manage all gym members and their information">
+    <Layout title="Member Management" subtitle="Manage all gym members and their information">
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         <div className="card bg-gradient-to-br from-primary-500 to-primary-600 text-white">
@@ -198,7 +198,7 @@ const CustomerList = () => {
               className="btn-primary flex items-center gap-2"
             >
               <UserPlus className="w-4 h-4" />
-              Add Customer
+              Add Member
             </button>
           </div>
         </div>
@@ -210,7 +210,7 @@ const CustomerList = () => {
           <table className="w-full">
             <thead>
               <tr className="bg-dark-50">
-                <th className="table-header">Customer</th>
+                <th className="table-header">Member</th>
                 <th className="table-header">Contact</th>
                 <th className="table-header">Address</th>
                 <th className="table-header">Membership</th>

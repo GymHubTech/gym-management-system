@@ -92,22 +92,29 @@ const MyAccount = () => {
   ];
 
   // Define tabs based on role - Admin sees subscription/billing, Trainer only sees profile
-  const adminTabs = [
-    { key: 'profile', label: 'Profile & Security', icon: User },
-    { key: 'subscription', label: 'Subscription', icon: CreditCard },
-    { key: 'billing', label: 'Billing History', icon: Calendar },
-  ];
+  // Commented out subscription and billing tabs for future use
+  // const adminTabs = [
+  //   { key: 'profile', label: 'Profile & Security', icon: User },
+  //   { key: 'subscription', label: 'Subscription', icon: CreditCard },
+  //   { key: 'billing', label: 'Billing History', icon: Calendar },
+  // ];
 
-  const trainerTabs = [
-    { key: 'profile', label: 'Profile & Security', icon: User },
-  ];
+  // const trainerTabs = [
+  //   { key: 'profile', label: 'Profile & Security', icon: User },
+  // ];
 
-  const tabs = isAdmin ? adminTabs : trainerTabs;
+  // const tabs = isAdmin ? adminTabs : trainerTabs;
+
+  // Only show Profile & Security tab for now
+  // Commented out tabs since there's only one tab
+  // const tabs = [
+  //   { key: 'profile', label: 'Profile & Security', icon: User },
+  // ];
 
   return (
     <Layout title="My Account" subtitle="Manage your account settings">
-      {/* Tabs */}
-      <div className="flex gap-2 mb-6 border-b border-dark-200 pb-2 overflow-x-auto">
+      {/* Tabs - Commented out since there's only one tab */}
+      {/* <div className="flex gap-2 mb-6 border-b border-dark-200 pb-2 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -122,7 +129,7 @@ const MyAccount = () => {
             {tab.label}
           </button>
         ))}
-      </div>
+      </div> */}
 
       {/* Profile & Security Tab */}
       {activeTab === 'profile' && (
@@ -248,8 +255,8 @@ const MyAccount = () => {
                 </button>
               </div>
 
-              {/* Two-Factor Authentication */}
-              <div className="flex items-center justify-between p-4 bg-dark-50 rounded-xl">
+              {/* Two-Factor Authentication - Commented out for future use */}
+              {/* <div className="flex items-center justify-between p-4 bg-dark-50 rounded-xl">
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-success-100 rounded-xl">
                     <Shield className="w-6 h-6 text-success-600" />
@@ -260,12 +267,12 @@ const MyAccount = () => {
                   </div>
                 </div>
                 <button className="btn-primary">Enable 2FA</button>
-              </div>
+              </div> */}
             </div>
           </div>
 
-          {/* Active Sessions */}
-          <div className="card">
+          {/* Active Sessions - Commented out for future use */}
+          {/* <div className="card">
             <h3 className="text-lg font-semibold text-dark-800 mb-4">Active Sessions</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-dark-50 rounded-xl">
@@ -295,7 +302,7 @@ const MyAccount = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       )}
 

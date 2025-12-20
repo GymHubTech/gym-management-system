@@ -44,26 +44,26 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
 
             {/* Check-In System */}
-            <Route path="/check-in" element={<CheckIn />} />
+            {/* <Route path="/check-in" element={<CheckIn />} /> */}
 
             {/* Customer Management */}
-            <Route path="/customers" element={<CustomerList />} />
-            <Route path="/customers/:id" element={<CustomerProfile />} />
+            <Route path="/members" element={<CustomerList />} />
+            <Route path="/members/:id" element={<CustomerProfile />} />
 
             {/* Membership Plans (Admin Only) */}
             <Route path="/membership-plans" element={<MembershipPlans />} />
 
             {/* Expenses (Admin Only) */}
-            <Route path="/expenses" element={<Expenses />} />
+            {/* <Route path="/expenses" element={<Expenses />} /> */}
 
             {/* Calendar */}
-            <Route path="/calendar" element={<Calendar />} />
+            {/* <Route path="/calendar" element={<Calendar />} /> */}
 
             {/* Reports */}
-            <Route path="/reports/summary" element={<SummaryReport />} />
+            {/* <Route path="/reports/summary" element={<SummaryReport />} />
             <Route path="/reports/collection" element={<CollectionReport />} />
             <Route path="/reports/expense" element={<ExpenseReport />} />
-            <Route path="/reports/my-collection" element={<MyCollection />} />
+            <Route path="/reports/my-collection" element={<MyCollection />} /> */}
 
             {/* User Management (Admin Only) */}
             <Route path="/users" element={<UserManagement />} />

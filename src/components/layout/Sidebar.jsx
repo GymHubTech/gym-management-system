@@ -34,10 +34,10 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       section: 'MAIN',
       items: [
         { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-        { path: '/check-in', icon: UserCheck, label: 'Check-In System' },
-        { path: '/customers', icon: Users, label: 'Customers' },
-        { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
-        { path: '/expenses', icon: Receipt, label: 'Expense List' },
+        // { path: '/check-in', icon: UserCheck, label: 'Check-In System' },
+        { path: '/members', icon: Users, label: 'Members List' },
+        // { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
+        // { path: '/expenses', icon: Receipt, label: 'Expense List' },
       ],
     },
     // Account Section
@@ -46,16 +46,16 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       items: [
         { path: '/membership-plans', icon: CreditCard, label: 'Membership Plans' },
         { path: '/users', icon: UserCog, label: 'User Management' },
-        {
-          label: 'Reports',
-          icon: FileBarChart,
-          key: 'reports',
-          children: [
-            { path: '/reports/summary', label: 'Summary Report' },
-            { path: '/reports/collection', label: 'Collection Report' },
-            { path: '/reports/expense', label: 'Expense Report' },
-          ],
-        },
+        // {
+        //   label: 'Reports',
+        //   icon: FileBarChart,
+        //   key: 'reports',
+        //   children: [
+        //     { path: '/reports/summary', label: 'Summary Report' },
+        //     { path: '/reports/collection', label: 'Collection Report' },
+        //     { path: '/reports/expense', label: 'Expense Report' },
+        //   ],
+        // },
         // { path: '/settings', icon: Settings, label: 'Settings' },
       ],
     },

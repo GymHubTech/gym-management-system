@@ -139,7 +139,7 @@ const CustomerForm = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={selectedCustomer ? 'Edit Customer' : 'Add New Customer'}
+      title={selectedCustomer ? 'Edit Member' : 'Add New Member'}
       size="full"
     >
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -158,7 +158,7 @@ const CustomerForm = ({
                   <>
                     <img
                       src={formData.photo}
-                      alt="Customer photo"
+                      alt="Member photo"
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         e.target.style.display = 'none';
@@ -612,7 +612,7 @@ const CustomerForm = ({
               ? 'Saving...'
               : selectedCustomer
               ? 'Save Changes'
-              : 'Add Customer'}
+              : 'Add Member'}
           </button>
         </div>
       </form>

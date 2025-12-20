@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Layout from '../components/layout/Layout';
 import { Avatar, Badge, Modal } from '../components/common';
 import {
@@ -25,6 +25,7 @@ const UserManagement = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showActionMenu, setShowActionMenu] = useState(null);
+  const menuRefs = useRef({});
 
   // Mock users data
   const users = [
@@ -71,9 +72,8 @@ const UserManagement = () => {
 
   const roles = [
     { value: 'admin', label: 'Administrator', color: 'danger' },
-    { value: 'trainer', label: 'Trainer', color: 'primary' },
+    { value: 'coach', label: 'Coach', color: 'primary' },
     { value: 'staff', label: 'Staff', color: 'success' },
-    { value: 'accountant', label: 'Accountant', color: 'warning' },
   ];
 
   const permissionsList = [
@@ -112,6 +112,50 @@ const UserManagement = () => {
     setShowEditModal(true);
     setShowActionMenu(null);
   };
+
+  // Remove duplicate menus (React Strict Mode fix)
+  useEffect(() => {
+    if (showActionMenu) {
+      const menuSelector = `[data-menu="action-menu-${showActionMenu}"]`;
+      const menus = document.querySelectorAll(menuSelector);
+      
+      // If more than one menu exists, remove duplicates
+      if (menus.length > 1) {
+        // Keep the first one, remove the rest
+        for (let i = 1; i < menus.length; i++) {
+          menus[i].remove();
+        }
+      }
+    }
+  }, [showActionMenu]);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showActionMenu) {
+        const menuElement = menuRefs.current[showActionMenu];
+        // Check if click is outside the menu and not on a menu button
+        const isClickInsideMenu = menuElement?.contains(event.target);
+        const isClickOnMenuButton = event.target.closest('[data-menu-button]');
+        
+        if (!isClickInsideMenu && !isClickOnMenuButton) {
+          setShowActionMenu(null);
+        }
+      }
+    };
+
+    if (showActionMenu) {
+      // Use a small delay to avoid immediate closure
+      const timeoutId = setTimeout(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+      }, 0);
+
+      return () => {
+        clearTimeout(timeoutId);
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [showActionMenu]);
 
   return (
     <Layout title="User Management" subtitle="Manage users and their access permissions">
@@ -245,47 +289,94 @@ const UserManagement = () => {
                     {user.lastLogin}
                   </td>
                   <td className="table-cell">
-                    <div className="relative">
+                    <div className="relative" onClick={(e) => e.stopPropagation()}>
                       <button
-                        onClick={() =>
+                        data-menu-button={`menu-btn-${user.id}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setShowActionMenu(
                             showActionMenu === user.id ? null : user.id
-                          )
-                        }
+                          );
+                        }}
                         className="p-2 text-dark-400 hover:bg-dark-100 rounded-lg transition-colors"
                       >
                         <MoreVertical className="w-5 h-5" />
                       </button>
                       {showActionMenu === user.id && (
-                        <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-dark-100 py-1 z-10">
+                        <div
+                          key={`action-menu-${user.id}`}
+                          data-menu={`action-menu-${user.id}`}
+                          ref={(el) => {
+                            if (el) {
+                              menuRefs.current[user.id] = el;
+                            } else {
+                              delete menuRefs.current[user.id];
+                            }
+                          }}
+                          className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-dark-100 py-1 z-50"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <button
-                            onClick={() => handleEditUser(user)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditUser(user);
+                            }}
                             className="w-full flex items-center gap-2 px-4 py-2 text-sm text-dark-600 hover:bg-dark-50"
                           >
                             <Edit className="w-4 h-4" />
                             Edit User
                           </button>
-                          <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-dark-600 hover:bg-dark-50">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowActionMenu(null);
+                            }}
+                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-dark-600 hover:bg-dark-50"
+                          >
                             <Key className="w-4 h-4" />
                             Reset Password
                           </button>
-                          <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-dark-600 hover:bg-dark-50">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowActionMenu(null);
+                            }}
+                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-dark-600 hover:bg-dark-50"
+                          >
                             <Shield className="w-4 h-4" />
                             Permissions
                           </button>
                           <hr className="my-1 border-dark-100" />
                           {user.status === 'active' ? (
-                            <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-warning-600 hover:bg-warning-50">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setShowActionMenu(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-warning-600 hover:bg-warning-50"
+                            >
                               <XCircle className="w-4 h-4" />
                               Deactivate
                             </button>
                           ) : (
-                            <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-success-600 hover:bg-success-50">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setShowActionMenu(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-success-600 hover:bg-success-50"
+                            >
                               <CheckCircle className="w-4 h-4" />
                               Activate
                             </button>
                           )}
-                          <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger-600 hover:bg-danger-50">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowActionMenu(null);
+                            }}
+                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger-600 hover:bg-danger-50"
+                          >
                             <Trash className="w-4 h-4" />
                             Delete
                           </button>

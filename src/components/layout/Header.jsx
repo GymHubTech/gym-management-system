@@ -53,7 +53,7 @@ const Header = ({ title, subtitle }) => {
           </div>
 
           {/* Role Switcher (Demo) */}
-          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-dark-100 rounded-lg">
+          {/* <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-dark-100 rounded-lg">
             <span className="text-xs text-dark-500">View as:</span>
             <button
               onClick={() => switchRole('admin')}
@@ -75,7 +75,7 @@ const Header = ({ title, subtitle }) => {
             >
               Trainer
             </button>
-          </div>
+          </div> */}
 
           {/* Notifications */}
           <div className="relative">
