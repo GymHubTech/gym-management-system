@@ -67,7 +67,11 @@ const Login = () => {
       localStorage.setItem('firebase_uid', user.uid);
 
       // Call login function from AuthContext which will fetch user data from backend
-      await login(idToken, user.uid);
+      const userData = await login(idToken, user.uid);
+      
+      if (!userData) {
+        throw new Error('Failed to fetch user data from server');
+      }
 
       Toast.success('Login successful!');
       navigate('/dashboard');

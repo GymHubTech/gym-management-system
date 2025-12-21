@@ -64,30 +64,37 @@ export const AuthProvider = ({ children }) => {
           role: data.role || 'admin',
           phone: data.phone,
           firebase_uid: data.firebase_uid,
+          permissions: data.permissions || [],
           avatar: data.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.firstname + ' ' + data.lastname)}&background=random`,
         };
         setUser(userData);
         return userData;
       }
-      return null;
+      throw new Error('Invalid user data received from server');
     } catch (error) {
       console.error('Error fetching user data:', error);
-      return null;
+      throw error; // Re-throw so caller can handle it
     }
   };
 
   // Login function
   const login = async (idToken, firebaseUid) => {
-    setToken(idToken);
-    localStorage.setItem('firebase_token', idToken);
-    // Store login timestamp for 24-hour expiration
-    localStorage.setItem('login_timestamp', Date.now().toString());
-    if (firebaseUid) {
-      localStorage.setItem('firebase_uid', firebaseUid);
+    try {
+      setToken(idToken);
+      localStorage.setItem('firebase_token', idToken);
+      // Store login timestamp for 24-hour expiration
+      localStorage.setItem('login_timestamp', Date.now().toString());
+      if (firebaseUid) {
+        localStorage.setItem('firebase_uid', firebaseUid);
+      }
+      
+      const userData = await fetchUserData(idToken);
+      return userData;
+    } catch (error) {
+      // Clear session on error
+      clearSession();
+      throw error;
     }
-    
-    const userData = await fetchUserData(idToken);
-    return userData;
   };
 
   // Logout function
@@ -141,8 +148,14 @@ export const AuthProvider = ({ children }) => {
               // Fetch user data from backend
               await fetchUserData(idToken);
             } catch (error) {
-              console.error('Error getting token:', error);
-              setUser(null);
+              console.error('Error getting token or fetching user data:', error);
+              // If token is invalid, clear session
+              if (error.message.includes('Invalid token')) {
+                clearSession();
+                Toast.error('Your session is invalid. Please login again.');
+              } else {
+                setUser(null);
+              }
             }
           } else {
             clearSession();
@@ -172,10 +185,20 @@ export const AuthProvider = ({ children }) => {
 
       const storedToken = localStorage.getItem('firebase_token');
       if (storedToken && !user) {
-        const userData = await fetchUserData(storedToken);
-        if (!userData) {
-          // Token might be invalid, clear it
+        try {
+          const userData = await fetchUserData(storedToken);
+          if (!userData) {
+            // Token might be invalid, clear it
+            clearSession();
+          }
+        } catch (error) {
+          // Handle invalid token or other errors
+          console.error('Error checking existing auth:', error);
           clearSession();
+          // Only show error toast if it's not a network error
+          if (!error.message.includes('Cannot connect to API')) {
+            Toast.error('Your session is invalid. Please login again.');
+          }
         }
       }
     };
