@@ -4,6 +4,10 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Store logout function reference
 let logoutFunction = null;
+// Flag to prevent invalid token handling during login
+let isLoggingIn = false;
+// Flag to prevent multiple simultaneous invalid token handlers
+let isHandlingInvalidToken = false;
 
 /**
  * Set the logout function to be called on invalid token
@@ -11,6 +15,14 @@ let logoutFunction = null;
  */
 export const setLogoutFunction = (logoutFn) => {
   logoutFunction = logoutFn;
+};
+
+/**
+ * Set the logging in flag to prevent invalid token handling during login
+ * @param {boolean} value - Whether we're currently logging in
+ */
+export const setLoggingIn = (value) => {
+  isLoggingIn = value;
 };
 
 /**
@@ -25,29 +37,50 @@ export const getAuthToken = () => {
  * Handle invalid token error - show alert, logout, and redirect
  */
 const handleInvalidToken = async () => {
-  // Clear any existing token
-  localStorage.removeItem('firebase_token');
-  localStorage.removeItem('firebase_uid');
-  localStorage.removeItem('login_timestamp');
-  
-  // Show SweetAlert
-  await Alert.warning(
-    'Session Expired',
-    'Your session has expired. Please login again to continue.',
-    {
-      confirmButtonText: 'Go to Login',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-    }
-  );
-  
-  // Call logout function if available
-  if (logoutFunction) {
-    await logoutFunction();
+  // Prevent multiple simultaneous calls
+  if (isHandlingInvalidToken) {
+    return;
   }
   
-  // Redirect to login
-  window.location.href = '/login';
+  isHandlingInvalidToken = true;
+  
+  try {
+    // Clear any existing token
+    localStorage.removeItem('firebase_token');
+    localStorage.removeItem('firebase_uid');
+    localStorage.removeItem('login_timestamp');
+    
+    // Show SweetAlert and WAIT for user to dismiss it
+    // The await will pause execution until user clicks OK, clicks outside, or presses ESC
+    await Alert.warning(
+      'Session Expired',
+      'Your session has expired. Please login again to continue.',
+      {
+        confirmButtonText: 'Go to Login',
+        allowOutsideClick: true,  // Allow clicking outside to dismiss
+        allowEscapeKey: true,     // Allow ESC to dismiss
+      }
+    );
+    
+    // Only proceed after user has dismissed the alert (clicked OK, clicked outside, or pressed ESC)
+    
+    // Call logout function if available
+    if (logoutFunction) {
+      await logoutFunction();
+    }
+    
+    // Redirect to login AFTER user has dismissed the alert
+    window.location.href = '/login';
+  } catch (error) {
+    console.error('Error in handleInvalidToken:', error);
+    // Even if there's an error, still redirect
+    window.location.href = '/login';
+  } finally {
+    // Reset flag after a delay to allow redirect to complete
+    setTimeout(() => {
+      isHandlingInvalidToken = false;
+    }, 1000);
+  }
 };
 
 /**
@@ -74,8 +107,8 @@ export const authenticatedFetch = async (url, options = {}) => {
     headers,
   });
 
-  // Check for invalid token errors
-  if (!response.ok) {
+  // Check for invalid token errors (but skip during login)
+  if (!response.ok && !isLoggingIn) {
     // Try to parse error message
     try {
       const errorData = await response.clone().json().catch(() => ({}));
@@ -122,7 +155,14 @@ export const authService = {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        const errorMessage = errorData.message || `HTTP error! status: ${response.status}`;
+        
+        // If we're logging in, don't throw "Session expired" errors - throw the actual error message
+        if (isLoggingIn) {
+          throw new Error(errorMessage);
+        }
+        
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -130,6 +170,12 @@ export const authService = {
     } catch (error) {
       if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
         throw new Error('Cannot connect to API. Please check if the server is running and CORS is configured.');
+      }
+      // If we're logging in, pass through the original error message
+      if (isLoggingIn && error.message.includes('Session expired')) {
+        // During login, if we get a session expired error, it's likely a different issue
+        // Re-throw with a more appropriate message
+        throw new Error('Authentication failed. Please try logging in again.');
       }
       throw error;
     }
