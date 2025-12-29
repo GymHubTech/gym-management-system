@@ -5,6 +5,9 @@ import { NotificationProvider } from './context/NotificationContext';
 import AlertProvider from './components/AlertProvider';
 import { queryClient } from './lib/queryClient';
 
+// Auth Pages
+import Login from './auth/Login';
+
 // Admin Pages
 import AdminDashboard from './pages/admin/Dashboard';
 
@@ -27,6 +30,25 @@ import Notifications from './pages/Notifications';
 import MyAccount from './pages/MyAccount';
 import Settings from './pages/Settings';
 
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
 // Dashboard component that renders based on user role
 const Dashboard = () => {
   const { isAdmin } = useAuth();
@@ -37,54 +59,55 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <NotificationProvider>
-          <AlertProvider>
-            <Router>
-              <Routes>
-                {/* Dashboard */}
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+        <AlertProvider>
+          <Router>
+            <Routes>
+              {/* Auth Routes */}
+              <Route path="/login" element={<Login />} />
 
-                {/* Check-In System */}
-                {/* <Route path="/check-in" element={<CheckIn />} /> */}
+              {/* Protected Routes */}
+              <Route path="/" element={<ProtectedRoute><Navigate to="/dashboard" replace /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
 
-                {/* Customer Management */}
-                <Route path="/members" element={<CustomerList />} />
-                <Route path="/members/:id" element={<CustomerProfile />} />
+              {/* Check-In System */}
+              {/* <Route path="/check-in" element={<CheckIn />} /> */}
 
-                {/* Membership Plans (Admin Only) */}
-                <Route path="/membership-plans" element={<MembershipPlans />} />
+              {/* Customer Management */}
+              <Route path="/members" element={<ProtectedRoute><CustomerList /></ProtectedRoute>} />
+              <Route path="/members/:id" element={<ProtectedRoute><CustomerProfile /></ProtectedRoute>} />
 
-                {/* Expenses (Admin Only) */}
-                {/* <Route path="/expenses" element={<Expenses />} /> */}
+              {/* Membership Plans (Admin Only) */}
+              <Route path="/membership-plans" element={<ProtectedRoute><MembershipPlans /></ProtectedRoute>} />
 
-                {/* Calendar */}
-                {/* <Route path="/calendar" element={<Calendar />} /> */}
+              {/* Expenses (Admin Only) */}
+              {/* <Route path="/expenses" element={<Expenses />} /> */}
 
-                {/* Reports */}
-                {/* <Route path="/reports/summary" element={<SummaryReport />} />
+              {/* Calendar */}
+              {/* <Route path="/calendar" element={<Calendar />} /> */}
+
+              {/* Reports */}
+              {/* <Route path="/reports/summary" element={<SummaryReport />} />
               <Route path="/reports/collection" element={<CollectionReport />} />
               <Route path="/reports/expense" element={<ExpenseReport />} />
               <Route path="/reports/my-collection" element={<MyCollection />} /> */}
 
-                {/* User Management (Admin Only) */}
-                <Route path="/users" element={<UserManagement />} />
+              {/* User Management (Admin Only) */}
+              <Route path="/users" element={<ProtectedRoute><UserManagement /></ProtectedRoute>} />
 
-                {/* Notifications */}
-                <Route path="/notifications" element={<Notifications />} />
+              {/* Notifications */}
+              <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
 
-                {/* My Account */}
-                <Route path="/my-account" element={<MyAccount />} />
+              {/* My Account */}
+              <Route path="/my-account" element={<ProtectedRoute><MyAccount /></ProtectedRoute>} />
 
-                {/* Settings */}
-                {/* <Route path="/settings" element={<Settings />} /> */}
+              {/* Settings */}
+              {/* <Route path="/settings" element={<Settings />} /> */}
 
-                {/* Catch all - redirect to dashboard */}
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
-              </Routes>
-            </Router>
-          </AlertProvider>
-        </NotificationProvider>
+              {/* Catch all - redirect to dashboard or login */}
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </Router>
+        </AlertProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
