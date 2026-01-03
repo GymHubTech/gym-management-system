@@ -61,6 +61,11 @@ export const AuthProvider = ({ children }) => {
       const data = await authService.getCurrentUser();
       
       if (data) {
+        // Backend returns permissions as an array of strings directly
+        const permissions = Array.isArray(data.permissions) 
+          ? data.permissions.filter((p) => typeof p === 'string')
+          : [];
+
         const userData = {
           id: data.id,
           firstname: data.firstname,
@@ -70,7 +75,7 @@ export const AuthProvider = ({ children }) => {
           role: data.role || 'admin',
           phone: data.phone,
           firebase_uid: data.firebase_uid,
-          permissions: data.permissions || [],
+          permissions: permissions,
           avatar: data.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.firstname + ' ' + data.lastname)}&background=random`,
         };
         setUser(userData);
