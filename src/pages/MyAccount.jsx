@@ -318,9 +318,9 @@ const MyAccount = () => {
               </button>
             </div>
             <div className="flex items-center gap-6">
-              <Avatar src={user.avatar} name={user.name} size="xl" />
+              <Avatar src={user.avatar} name={user.fullname} size="xl" />
               <div className="flex-1">
-                <h4 className="text-xl font-bold text-dark-50">{user.name}</h4>
+                <h4 className="text-xl font-bold text-dark-50">{user.fullname}</h4>
                 <p className="text-dark-500">{user.email}</p>
                 <Badge variant="primary" size="lg">
                   {user.role}
@@ -621,26 +621,12 @@ const MyAccount = () => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="label">First Name *</label>
-              <input
-                type="text"
-                name="firstname"
-                className="input"
-                value={formData.firstname}
-                onChange={handleInputChange}
-                required
-              />
+              <label className="label">First Name</label>
+              <input type="text" className="input" defaultValue={user.firstname || ''} />
             </div>
             <div>
-              <label className="label">Last Name *</label>
-              <input
-                type="text"
-                name="lastname"
-                className="input"
-                value={formData.lastname}
-                onChange={handleInputChange}
-                required
-              />
+              <label className="label">Last Name</label>
+              <input type="text" className="input" defaultValue={user.lastname || ''} />
             </div>
           </div>
           <div>
