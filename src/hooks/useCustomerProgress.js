@@ -29,19 +29,6 @@ export const useCustomerProgress = (customerId, options = {}) => {
 };
 
 /**
- * Hook to fetch a single progress record by ID
- */
-export const useCustomerProgressById = (id) => {
-  return useQuery({
-    queryKey: customerProgressKeys.detail(id),
-    queryFn: async () => {
-      return await customerProgressService.getById(id);
-    },
-    enabled: !!id, // Only run query if id exists
-  });
-};
-
-/**
  * Hook to create a new progress record
  */
 export const useCreateCustomerProgress = () => {

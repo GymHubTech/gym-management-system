@@ -16,10 +16,13 @@ jobs:
           node-version: '20'
       - run: npm ci
       - name: Secure Config Injection and Build
+        env:
+          FIREBASE_ADMIN_CREDENTIALS: ${{ secrets.FIREBASE_ADMIN_CREDENTIALS }}
+          VITE_API_BASE_URL: https://gym-management-api-21018123230.asia-southeast1.run.app/api
         run: |
-          echo '${{ secrets.FIREBASE_ADMIN_CREDENTIALS }}' > ./service-account-key.json
+          echo "$FIREBASE_ADMIN_CREDENTIALS" > ./service-account-key.json
           export GOOGLE_APPLICATION_CREDENTIALS="./service-account-key.json"
-          VITE_API_BASE_URL=https://gym-management-api-21018123230.asia-southeast1.run.app/api npm run build
+          npm run build
           rm ./service-account-key.json
           
       - uses: FirebaseExtended/action-hosting-deploy@v0

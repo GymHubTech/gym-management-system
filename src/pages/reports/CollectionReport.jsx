@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import { Badge } from '../../components/common';
 import {
@@ -33,6 +34,7 @@ import {
 import { mockPayments, mockRevenueData, mockMembershipDistribution } from '../../data/mockData';
 
 const CollectionReport = () => {
+  const navigate = useNavigate();
   const [dateRange, setDateRange] = useState('month');
   const [paymentMethod, setPaymentMethod] = useState('all');
 
@@ -330,9 +332,12 @@ const CollectionReport = () => {
           <h3 className="text-lg font-semibold text-dark-800">
             Recent Transactions
           </h3>
-          <a href="/customers/bills" className="text-primary-600 text-sm font-medium">
+          <button
+            onClick={() => navigate('/members')}
+            className="text-primary-600 text-sm font-medium cursor-pointer"
+          >
             View All →
-          </a>
+          </button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">

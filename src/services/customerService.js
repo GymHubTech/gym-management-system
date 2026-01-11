@@ -144,12 +144,12 @@ export const customerService = {
   },
 
   /**
-   * Get all trainers
+   * Get all trainers (coaches)
    * @returns {Promise<Array>}
    */
   async getTrainers() {
     try {
-      const response = await authenticatedFetch(`${API_BASE_URL}/customers/trainers`, {
+      const response = await authenticatedFetch(`${API_BASE_URL}/users/coaches`, {
         method: 'GET',
       });
 

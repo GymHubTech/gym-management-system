@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import { StatCard, Avatar, Badge } from '../../components/common';
 import {
@@ -33,6 +34,7 @@ import {
 } from 'recharts';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -196,9 +198,12 @@ const AdminDashboard = () => {
         <div className="card md:col-span-8">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-dark-50">Memberships Expiring Soon</h3>
-            <a href="/customers" className="text-sm text-primary-500 hover:text-primary-600 font-medium">
+            <button
+              onClick={() => navigate('/members')}
+              className="text-sm text-primary-500 hover:text-primary-600 font-medium cursor-pointer"
+            >
               View All Members →
-            </a>
+            </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">

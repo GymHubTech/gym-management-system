@@ -99,13 +99,13 @@ const Login = () => {
             attempts++;
             // Check localStorage directly for token since state might not be updated yet
             const storedToken = localStorage.getItem('firebase_token');
-            const storedLoginTime = localStorage.getItem('login_timestamp');
+            const storedSessionStartTime = localStorage.getItem('session_start_time');
             const hasToken = !!storedToken;
             const hasUser = !!user || !!userData;
-            const hasLoginTime = !!storedLoginTime;
+            const hasSessionStartTime = !!storedSessionStartTime;
             
             // Check if we have all required data
-            const currentAuth = isAuthenticated || (hasUser && hasToken && hasLoginTime);
+            const currentAuth = isAuthenticated || (hasUser && hasToken && hasSessionStartTime);
             
             if (currentAuth || attempts >= maxAttempts) {
               resolve(currentAuth);
