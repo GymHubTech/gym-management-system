@@ -45,9 +45,12 @@ const handleInvalidToken = async () => {
   isHandlingInvalidToken = true;
   
   try {
-    // Clear any existing token
+    // Clear any existing token and session data
     localStorage.removeItem('firebase_token');
     localStorage.removeItem('firebase_uid');
+    localStorage.removeItem('session_start_time');
+    localStorage.removeItem('token_expiration');
+    // Also remove old login_timestamp for backward compatibility
     localStorage.removeItem('login_timestamp');
     
     // Show SweetAlert and WAIT for user to dismiss it

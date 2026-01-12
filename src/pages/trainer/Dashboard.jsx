@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 import { StatCard, Avatar, Badge } from '../../components/common';
 import {
@@ -23,6 +24,7 @@ import {
 } from 'recharts';
 
 const TrainerDashboard = () => {
+  const navigate = useNavigate();
   // Mock trainer-specific data
   const trainerStats = {
     assignedMembers: 15,
@@ -138,9 +140,12 @@ const TrainerDashboard = () => {
         <div className="card">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-dark-800">Today's Schedule</h3>
-            <a href="/calendar" className="text-sm text-primary-500 hover:text-primary-600 font-medium">
+            <button
+              onClick={() => navigate('/calendar')}
+              className="text-sm text-primary-500 hover:text-primary-600 font-medium cursor-pointer"
+            >
               View Calendar →
-            </a>
+            </button>
           </div>
           <div className="space-y-3">
             {myAppointments
@@ -184,9 +189,12 @@ const TrainerDashboard = () => {
       <div className="card">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-dark-800">My Assigned Members</h3>
-          <a href="/customers" className="text-sm text-primary-500 hover:text-primary-600 font-medium">
+          <button
+            onClick={() => navigate('/members')}
+            className="text-sm text-primary-500 hover:text-primary-600 font-medium cursor-pointer"
+          >
             View All →
-          </a>
+          </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {myMembers.slice(0, 6).map((member) => (
@@ -227,9 +235,12 @@ const TrainerDashboard = () => {
       <div className="card mt-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-dark-800">Pending Progress Updates</h3>
-          <a href="/customers/progress" className="text-sm text-primary-500 hover:text-primary-600 font-medium">
+          <button
+            onClick={() => navigate('/members')}
+            className="text-sm text-primary-500 hover:text-primary-600 font-medium cursor-pointer"
+          >
             View All →
-          </a>
+          </button>
         </div>
         <div className="space-y-4">
           {myMembers.slice(0, 3).map((member) => (

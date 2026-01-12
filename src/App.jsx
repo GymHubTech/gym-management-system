@@ -25,12 +25,14 @@ import Expenses from './pages/Expenses';
 import PtPackageList from './pages/admin/PtPackageList';
 import SessionScheduling from './pages/common/SessionScheduling';
 import ClassScheduleList from './pages/common/ClassScheduleList';
+import Expenses from './pages/common/Expenses';
 import Calendar from './pages/Calendar';
 import CollectionReport from './pages/reports/CollectionReport';
 import ExpenseReport from './pages/reports/ExpenseReport';
 import SummaryReport from './pages/reports/SummaryReport';
 import MyCollection from './pages/reports/MyCollection';
-import UserManagement from './pages/UserManagement';
+import MembershipPlans from './pages/admin/MembershipPlans';
+import UserManagement from './pages/admin/UserManagement';
 import Notifications from './pages/Notifications';
 import MyAccount from './pages/MyAccount';
 import Settings from './pages/Settings';
@@ -129,7 +131,7 @@ function App() {
                 {/* Customer Management */}
                 <Route path="/members" element={<ProtectedRoute><CustomerList /></ProtectedRoute>} />
                 <Route path="/members/:id" element={<ProtectedRoute><CustomerProfile /></ProtectedRoute>} />
-                
+
                 <Route path="/expenses" element={<ProtectedRoute><Expenses /></ProtectedRoute>} />
 
                 {/* PT & Class Management */}

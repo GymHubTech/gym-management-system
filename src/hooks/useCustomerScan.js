@@ -29,19 +29,6 @@ export const useCustomerScans = (customerId, options = {}) => {
 };
 
 /**
- * Hook to fetch a single scan by ID
- */
-export const useCustomerScanById = (id) => {
-  return useQuery({
-    queryKey: customerScanKeys.detail(id),
-    queryFn: async () => {
-      return await customerScanService.getById(id);
-    },
-    enabled: !!id, // Only run query if id exists
-  });
-};
-
-/**
  * Hook to create a new scan
  */
 export const useCreateCustomerScan = () => {

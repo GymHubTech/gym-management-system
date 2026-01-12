@@ -75,32 +75,6 @@ export const customerProgressService = {
   },
 
   /**
-   * Get a progress record by ID
-   * @param {number} id - Progress record ID
-   * @returns {Promise<Object>}
-   */
-  async getById(id) {
-    try {
-      const response = await authenticatedFetch(`${API_BASE_URL}/customers/progress/${id}`, {
-        method: 'GET',
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data.success ? data.data : null;
-    } catch (error) {
-      if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-        throw new Error('Cannot connect to API. Please check if the server is running and CORS is configured.');
-      }
-      throw error;
-    }
-  },
-
-  /**
    * Create a new progress record
    * @param {number} customerId - Customer ID
    * @param {Object} progressData - Progress data
