@@ -1,0 +1,42 @@
+# This file was auto-generated for Firebase Hosting PR Preview
+# Automatically builds and deploys Pull Request branches to Firebase Hosting preview channels
+
+name: Deploy to Firebase Hosting on PR
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - master
+
+jobs:
+  build_and_preview:
+    # Skip deployment if PR is closed
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - run: npm ci
+      
+      - name: Secure Config Injection and Build
+        env:
+          FIREBASE_ADMIN_CREDENTIALS: ${{ secrets.FIREBASE_ADMIN_CREDENTIALS }}
+          VITE_API_BASE_URL: https://gym-management-api-21018123230.asia-southeast1.run.app/api
+        run: |
+          echo "$FIREBASE_ADMIN_CREDENTIALS" > ./service-account-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS="./service-account-key.json"
+          npm run build
+          rm ./service-account-key.json
+      
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GYMHUBTECH_67E6F }}
+          projectId: gymhubtech-67e6f
+          # Omit channelId to auto-generate preview channel for PR
+          # The action will automatically comment on the PR with the preview URL
+          # Preview channels expire automatically after 7 days of inactivity
