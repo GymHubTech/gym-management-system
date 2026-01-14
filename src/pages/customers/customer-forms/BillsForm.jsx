@@ -278,6 +278,38 @@ const BillsForm = ({ customerId, currentMembership, onSubmit, onCancel, onCustom
         </div>
       )}
 
+      {formData.billType === BILL_TYPE.REACTIVATION_FEE && (
+        <div className="grid grid-cols-2 gap-4">
+          {/* Info message (left) */}
+          <div>
+            <div className="p-3 bg-info-50 border border-info-200 rounded-lg">
+              <p className="text-sm text-info-800">
+                <strong>Note:</strong> Creating a reactivation fee bill will automatically void any outstanding balance from expired membership plans.
+              </p>
+            </div>
+          </div>
+
+          {/* Reactivation Fee Amount (right) */}
+          <div>
+            <label className="label">Reactivation Fee Amount</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-400">₱</span>
+              <input
+                type="number"
+                name="grossAmount"
+                value={formData.grossAmount}
+                onChange={handleChange}
+                className="input pl-8"
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                required
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Row 3: Discount Percentage (right side) */}
       <div className="grid grid-cols-2 gap-4">
         <div></div>
