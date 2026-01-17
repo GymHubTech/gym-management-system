@@ -45,6 +45,13 @@ jobs:
           npm run build
           rm ./service-account-key.json
       
+      - name: Verify build output
+        run: |
+          echo "Checking dist folder..."
+          ls -la dist/ || echo "dist folder not found!"
+          echo "Checking firebase.json..."
+          cat firebase.json
+      
       - name: Deploy to Firebase Hosting Preview
         id: firebase-deploy
         continue-on-error: true
@@ -54,6 +61,7 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GYMHUBTECH_67E6F }}
           projectId: gymhubtech-67e6f
           channelId: pr-${{ github.event.pull_request.number }}
+          target: hosting
       
       - name: Construct Preview URL
         id: preview-url
