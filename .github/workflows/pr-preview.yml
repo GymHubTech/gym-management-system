@@ -69,66 +69,9 @@ jobs:
       
       - name: Deploy to Firebase Hosting Preview
         id: firebase-deploy
-        continue-on-error: true
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GYMHUBTECH_67E6F }}
           channelId: pr-${{ github.event.pull_request.number }}
           projectId: gymhubtech-67e6f
-      
-      - name: Construct Preview URL
-        id: preview-url
-        if: always()
-        run: |
-          CHANNEL_ID="pr-${{ github.event.pull_request.number }}"
-          PREVIEW_URL="https://gymhubtech-67e6f--${CHANNEL_ID}.web.app"
-          echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_OUTPUT
-          echo "Preview URL: $PREVIEW_URL"
-      
-      - name: Comment PR with Preview URL
-        uses: actions/github-script@v7
-        if: steps.preview-url.outputs.PREVIEW_URL != ''
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const previewUrl = '${{ steps.preview-url.outputs.PREVIEW_URL }}';
-            const prNumber = context.payload.pull_request.number;
-            
-            const comments = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber,
-            });
-            
-            const botComment = comments.data.find(comment =>
-              comment.user.type === 'Bot' &&
-              comment.body.includes('🚀 **Frontend Preview Deployment**')
-            );
-            
-            const body = `🚀 **Frontend Preview Deployment**
-            
-            ✅ Your frontend has been deployed to a preview channel!
-            
-            **Preview URL:** ${previewUrl}
-            
-            This preview will be automatically deleted when the PR is closed or merged.
-            
-            ---
-            *Deployed from commit: \`${{ github.sha }}\`*`;
-            
-            if (botComment) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: body
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: prNumber,
-                body: body
-              });
-            }
