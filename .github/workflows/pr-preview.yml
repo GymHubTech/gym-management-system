@@ -35,15 +35,94 @@ jobs:
       
       - run: npm ci
       
-      - name: Secure Config Injection and Build
+      - name: Authenticate to Google Cloud
         env:
           FIREBASE_ADMIN_CREDENTIALS: ${{ secrets.FIREBASE_ADMIN_CREDENTIALS }}
-          VITE_API_BASE_URL: https://gym-management-api-21018123230.asia-southeast1.run.app/api
         run: |
           echo "$FIREBASE_ADMIN_CREDENTIALS" > ./service-account-key.json
           export GOOGLE_APPLICATION_CREDENTIALS="./service-account-key.json"
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ./service-account-key.json
+          project_id: gymhubtech-67e6f
+      
+      - name: Find Backend Preview URL
+        id: backend-url
+        run: |
+          REGION="asia-southeast1"
+          STAGING_BACKEND="https://gym-management-api-21018123230.asia-southeast1.run.app/api"
+          MAX_WAIT_TIME=180  # Wait up to 3 minutes for backend to be ready
+          CHECK_INTERVAL=10   # Check every 10 seconds
+          
+          # Get branch name and sanitize it (same logic as backend workflow)
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          BRANCH_SANITIZED=$(echo "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g' | cut -c1-50)
+          SERVICE_NAME_BY_BRANCH="gym-management-api-${BRANCH_SANITIZED}"
+          
+          echo "Looking for backend preview by branch name: ${SERVICE_NAME_BY_BRANCH}"
+          echo "Branch: ${BRANCH_NAME} -> Service: ${SERVICE_NAME_BY_BRANCH}"
+          echo "Will wait up to ${MAX_WAIT_TIME} seconds for backend to be ready..."
+          
+          # Wait and retry for backend preview to be available
+          ELAPSED=0
+          BACKEND_URL=""
+          
+          while [ $ELAPSED -lt $MAX_WAIT_TIME ]; do
+            BACKEND_URL=$(gcloud run services describe ${SERVICE_NAME_BY_BRANCH} \
+              --region ${REGION} \
+              --format 'value(status.url)' 2>/dev/null || echo "")
+            
+            if [ -n "$BACKEND_URL" ]; then
+              # Check if service is actually ready (not just created)
+              SERVICE_STATUS=$(gcloud run services describe ${SERVICE_NAME_BY_BRANCH} \
+                --region ${REGION} \
+                --format 'value(status.conditions[0].status)' 2>/dev/null || echo "")
+              
+              if [ "$SERVICE_STATUS" = "True" ]; then
+                echo "✓ Backend preview is ready after ${ELAPSED} seconds!"
+                break
+              else
+                echo "Backend preview exists but not ready yet (${ELAPSED}s)..."
+                BACKEND_URL=""
+              fi
+            else
+              echo "Backend preview not found yet (${ELAPSED}s)..."
+            fi
+            
+            sleep $CHECK_INTERVAL
+            ELAPSED=$((ELAPSED + CHECK_INTERVAL))
+          done
+          
+          if [ -n "$BACKEND_URL" ]; then
+            # Found matching backend preview for this branch
+            BACKEND_API_URL="${BACKEND_URL}/api"
+            echo "✓ Using backend preview for branch '${BRANCH_NAME}': ${BACKEND_API_URL}"
+            echo "BACKEND_API_URL=${BACKEND_API_URL}" >> $GITHUB_ENV
+            echo "BACKEND_API_URL=${BACKEND_API_URL}" >> $GITHUB_OUTPUT
+          else
+            # No matching backend preview found - use staging backend (master branch)
+            BACKEND_API_URL="${STAGING_BACKEND}"
+            echo "⚠ Backend preview not found after ${MAX_WAIT_TIME} seconds"
+            echo "  → Using staging backend (master branch): ${BACKEND_API_URL}"
+            echo "BACKEND_API_URL=${BACKEND_API_URL}" >> $GITHUB_ENV
+            echo "BACKEND_API_URL=${BACKEND_API_URL}" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Secure Config Injection and Build
+        env:
+          FIREBASE_ADMIN_CREDENTIALS: ${{ secrets.FIREBASE_ADMIN_CREDENTIALS }}
+          VITE_API_BASE_URL: ${{ env.BACKEND_API_URL }}
+        run: |
+          echo "Building frontend with API URL: $VITE_API_BASE_URL"
+          export GOOGLE_APPLICATION_CREDENTIALS="./service-account-key.json"
           npm run build
-          rm ./service-account-key.json
+      
+      - name: Cleanup auth files
+        if: always()
+        run: |
+          rm -f ./service-account-key.json
       
       - name: Update firebase.json with site ID
         run: |
@@ -69,66 +148,9 @@ jobs:
       
       - name: Deploy to Firebase Hosting Preview
         id: firebase-deploy
-        continue-on-error: true
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GYMHUBTECH_67E6F }}
           channelId: pr-${{ github.event.pull_request.number }}
           projectId: gymhubtech-67e6f
-      
-      - name: Construct Preview URL
-        id: preview-url
-        if: always()
-        run: |
-          CHANNEL_ID="pr-${{ github.event.pull_request.number }}"
-          PREVIEW_URL="https://gymhubtech-67e6f--${CHANNEL_ID}.web.app"
-          echo "PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_OUTPUT
-          echo "Preview URL: $PREVIEW_URL"
-      
-      - name: Comment PR with Preview URL
-        uses: actions/github-script@v7
-        if: steps.preview-url.outputs.PREVIEW_URL != ''
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const previewUrl = '${{ steps.preview-url.outputs.PREVIEW_URL }}';
-            const prNumber = context.payload.pull_request.number;
-            
-            const comments = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber,
-            });
-            
-            const botComment = comments.data.find(comment =>
-              comment.user.type === 'Bot' &&
-              comment.body.includes('🚀 **Frontend Preview Deployment**')
-            );
-            
-            const body = `🚀 **Frontend Preview Deployment**
-            
-            ✅ Your frontend has been deployed to a preview channel!
-            
-            **Preview URL:** ${previewUrl}
-            
-            This preview will be automatically deleted when the PR is closed or merged.
-            
-            ---
-            *Deployed from commit: \`${{ github.sha }}\`*`;
-            
-            if (botComment) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: body
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: prNumber,
-                body: body
-              });
-            }
