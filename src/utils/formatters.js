@@ -235,3 +235,23 @@ export const formatTime = (timeString) => {
   return `${displayHour}:${String(minute).padStart(2, '0')} ${period}`;
 };
 
+/**
+ * Format time from Date object to readable format (e.g., "10:00 AM")
+ * @param {string|Date} dateString - Date object or date string
+ * @returns {string} - Formatted time string or 'N/A' if invalid
+ */
+export const formatTimeFromDate = (dateString) => {
+  if (!dateString) return 'N/A';
+  
+  const date = new Date(dateString);
+  
+  // Check for invalid date
+  if (isNaN(date.getTime())) return 'N/A';
+  
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const timeString = `${hours}:${minutes}`;
+  
+  return formatTime(timeString);
+};
+
